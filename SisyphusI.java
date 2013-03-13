@@ -25,7 +25,7 @@ public class SisyphusI {
 	 */
 	public static void main(String[] args) {
 
-		final Environment env = Environment.get();
+		/* final Environment env = Environment.get();
 		Solution.verbosity = Solution.Verbosity.SUMMARY;
 
 		String fromFile = null;
@@ -104,7 +104,7 @@ public class SisyphusI {
 		}
 		try {
 			Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
-		} catch (IllegalStateException e) {};
+		} catch (IllegalStateException e) {}; */
 	}
 
 }
