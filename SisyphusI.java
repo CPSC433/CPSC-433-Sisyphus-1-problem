@@ -24,6 +24,17 @@ public class SisyphusI {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		Environment env = new Environment("PredicateReader");
+		String fromFile = null;
+		
+		if (args.length>0) {
+			fromFile = args[0];
+			env.fromFile(fromFile);
+		}
+		else {
+			System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
+		}
 
 		/* final Environment env = Environment.get();
 		Solution.verbosity = Solution.Verbosity.SUMMARY;
