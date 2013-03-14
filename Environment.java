@@ -83,4 +83,7 @@ implements SisyphusPredicates
 	
 	public void a_large_project(String prj){}
 	public boolean e_large_project(String prj){return false;}
+	
+	// This needs to be changed:
+	public String currentSolution = "Test2";
 }

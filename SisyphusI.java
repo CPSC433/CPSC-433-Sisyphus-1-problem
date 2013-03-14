@@ -39,7 +39,7 @@ public class SisyphusI {
 		final String out = fromFile+".out";
 		try {
 			PrintStream outFile = new PrintStream(new FileOutputStream(out));
-			outFile.println("TEST");
+			outFile.println(env.currentSolution);
 			outFile.close();
 		} catch (Exception ex) {}
 		/*
