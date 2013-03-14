@@ -35,31 +35,19 @@ public class SisyphusI {
 		else {
 			System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
 		}
-
-		/* final Environment env = Environment.get();
-		Solution.verbosity = Solution.Verbosity.SUMMARY;
-
-		String fromFile = null;
-
-		if (args.length>0) {
-			fromFile = args[0];
-			env.fromFile(fromFile);
-		}
-		else {
-			System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
-		}
-
+		
 		final String out = fromFile+".out";
+		try {
+			PrintStream outFile = new PrintStream(new FileOutputStream(out));
+			outFile.println("TEST");
+			outFile.close();
+		} catch (Exception ex) {}
+		/*
 
 		Thread shutdownHookThread = new Thread("SisyphusIShutdownHook")
 		{@Override public void run() {
 			System.err.println("***Shutdown hook activated***");
-			try {
-				PrintStream outFile = new PrintStream(new FileOutputStream(out));
-				outFile.println(env.currentSolution.toString());
-				outFile.close();
-			}
-			catch (Exception ex) {}
+			
 			System.err.println(env.currentSolution==null
 					?"no current solution"
 							:env.currentSolution.toString());
