@@ -134,7 +134,7 @@ public class PredicateReader extends Entity {
 	 * @return a <code>Predicate</code> or null, depending on if
 	 * there is a predicate in <code>line</code>.
 	 */
-	private Predicate makePredicate(String line) {
+	protected Predicate makePredicate(String line) {
 		if (line!=null) {
 			line = stripComments(line);
 			Predicate p = null;
