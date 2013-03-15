@@ -39,9 +39,17 @@ public class SisyphusI {
 		final String out = fromFile+".out";
 		try {
 			PrintStream outFile = new PrintStream(new FileOutputStream(out));
-			outFile.println(env.currentSolution);
+			for( int i = 0; i < env.arrPredicates.size(); i++ )
+			{
+				outFile.println(env.arrPredicates.get(i).toString());
+			}
 			outFile.close();
 		} catch (Exception ex) {}
+		
+		if( env.IsSolution() )
+			System.out.println("There is a valid solution for this input");
+		else
+			System.out.println("There is not a valid solution for this input");
 		/*
 
 		Thread shutdownHookThread = new Thread("SisyphusIShutdownHook")
