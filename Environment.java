@@ -19,8 +19,29 @@ implements SisyphusPredicates
 	private int numManagers = 0;
 	private int numRooms = 0;
 	
-	// Stores all predicates interpreted from input file
+	// Stores all remaining predicates interpreted from input file
 	public ArrayList<Predicate> arrPredicates = new ArrayList<Predicate>();
+	
+	// Stores all employee predicates interpreted from input file
+	public ArrayList<Predicate> arrEmployees = new ArrayList<Predicate>();
+	
+	// Stores all room predicates interpreted from input file
+	public ArrayList<Predicate> arrRooms = new ArrayList<Predicate>();
+	
+	// Stores all group predicates interpreted from input file
+	public ArrayList<Predicate> arrGroups = new ArrayList<Predicate>();
+	
+	// Stores all project predicates interpreted from input file
+	public ArrayList<Predicate> arrProjects = new ArrayList<Predicate>();
+	
+	// Stores all room size predicates interpreted from input file
+	public ArrayList<Predicate> arrRoomSizes = new ArrayList<Predicate>();
+	
+	// Stores all room proximity predicates interpreted from input file
+	public ArrayList<Predicate> arrRoomProximity = new ArrayList<Predicate>();
+	
+	// Stores all project description predicates interpreted from input file
+	public ArrayList<Predicate> arrProjectDescriptions = new ArrayList<Predicate>();
 	
 	public void a_person(String p)
 	{
@@ -34,7 +55,7 @@ implements SisyphusPredicates
 		a_person(p);
 		
 		String newPredicate = "secretary("+p+")";
-		int ret = addNewPredicate( newPredicate );
+		int ret = addNewEmployee( newPredicate );
 		
 		if( ret == 1 )
 			numEmployees++;
@@ -46,7 +67,7 @@ implements SisyphusPredicates
 		a_person(p);
 		
 		String newPredicate = "researcher("+p+")";
-		int ret = addNewPredicate( newPredicate );
+		int ret = addNewEmployee( newPredicate );
 		
 		if( ret == 1 )
 			numEmployees++;
@@ -58,7 +79,7 @@ implements SisyphusPredicates
 		a_person(p);
 		
 		String newPredicate = "manager("+p+")";
-		int ret = addNewPredicate( newPredicate );
+		int ret = addNewEmployee( newPredicate );
 		
 		if( ret == 1 )
 			numManagers++;
@@ -208,7 +229,7 @@ implements SisyphusPredicates
 	public void a_room(String r)
 	{
 		String newPredicate = "room("+r+")";
-		int ret = addNewPredicate( newPredicate );
+		int ret = addNewRoom( newPredicate );
 		
 		if( ret == 1 )
 			numRooms++;
@@ -222,10 +243,10 @@ implements SisyphusPredicates
 		a_room(room2);
 		
 		String newPredicate = "close("+room+", "+room2+")";
-		addNewPredicate( newPredicate );
+		addNewRoomProximity( newPredicate );
 		
 		newPredicate = "close("+room2+", "+room+")";
-		addNewPredicate( newPredicate );
+		addNewRoomProximity( newPredicate );
 	}	
 	public boolean e_close(String room, String room2){return false;}
 	
@@ -266,7 +287,7 @@ implements SisyphusPredicates
 		a_room(r);
 		
 		String newPredicate = "large-room("+r+")";
-		addNewPredicate( newPredicate );
+		addNewRoomSize( newPredicate );
 	}
 	public boolean e_large_room(String r){return false;}
 	
@@ -275,7 +296,7 @@ implements SisyphusPredicates
 		a_room(r);
 		
 		String newPredicate = "medium-room("+r+")";
-		addNewPredicate( newPredicate );
+		addNewRoomSize( newPredicate );
 	}
 	public boolean e_medium_room(String r){return false;}
 	
@@ -284,7 +305,7 @@ implements SisyphusPredicates
 		a_room(r);
 		
 		String newPredicate = "small-room("+r+")";
-		addNewPredicate( newPredicate );
+		addNewRoomSize( newPredicate );
 	}
 	public boolean e_small_room(String r){return false;}
 	
@@ -292,7 +313,7 @@ implements SisyphusPredicates
 	public void a_group(String g)
 	{		
 		String newPredicate = "group("+g+")";
-		addNewPredicate( newPredicate );
+		addNewGroup( newPredicate );
 	}
 	public boolean e_group(String g){return false;}
 	
@@ -300,14 +321,14 @@ implements SisyphusPredicates
 	public void a_project(String p)
 	{
 		String newPredicate = "project("+p+")";
-		addNewPredicate( newPredicate );
+		addNewProject( newPredicate );
 	}
 	public boolean e_project(String p){return false;}
 	
 	public void a_large_project(String prj)
 	{
 		String newPredicate = "large-project("+prj+")";
-		addNewPredicate( newPredicate );
+		addNewProjectDescription( newPredicate );
 	}
 	public boolean e_large_project(String prj){return false;}
 	
@@ -321,6 +342,97 @@ implements SisyphusPredicates
 				return 0;
 		}
 		arrPredicates.add(pred);
+		
+		return 1;
+	}
+	
+	private int addNewEmployee( String newPredicate )
+	{
+		pred = makePredicate(newPredicate);
+		for( int i = 0; i < arrEmployees.size(); i++ )
+		{
+			if( pred.toString().compareTo(arrEmployees.get(i).toString()) == 0 )
+				return 0;
+		}
+		arrEmployees.add(pred);
+		
+		return 1;
+	}
+	
+	private int addNewRoom( String newPredicate )
+	{
+		pred = makePredicate(newPredicate);
+		for( int i = 0; i < arrRooms.size(); i++ )
+		{
+			if( pred.toString().compareTo(arrRooms.get(i).toString()) == 0 )
+				return 0;
+		}
+		arrRooms.add(pred);
+		
+		return 1;
+	}
+	
+	private int addNewGroup( String newPredicate )
+	{
+		pred = makePredicate(newPredicate);
+		for( int i = 0; i < arrGroups.size(); i++ )
+		{
+			if( pred.toString().compareTo(arrGroups.get(i).toString()) == 0 )
+				return 0;
+		}
+		arrGroups.add(pred);
+		
+		return 1;
+	}
+	
+	private int addNewProject( String newPredicate )
+	{
+		pred = makePredicate(newPredicate);
+		for( int i = 0; i < arrProjects.size(); i++ )
+		{
+			if( pred.toString().compareTo(arrProjects.get(i).toString()) == 0 )
+				return 0;
+		}
+		arrProjects.add(pred);
+		
+		return 1;
+	}
+	
+	private int addNewRoomSize( String newPredicate )
+	{
+		pred = makePredicate(newPredicate);
+		for( int i = 0; i < arrRoomSizes.size(); i++ )
+		{
+			if( pred.toString().compareTo(arrRoomSizes.get(i).toString()) == 0 )
+				return 0;
+		}
+		arrRoomSizes.add(pred);
+		
+		return 1;
+	}
+	
+	private int addNewRoomProximity( String newPredicate )
+	{
+		pred = makePredicate(newPredicate);
+		for( int i = 0; i < arrRoomProximity.size(); i++ )
+		{
+			if( pred.toString().compareTo(arrRoomProximity.get(i).toString()) == 0 )
+				return 0;
+		}
+		arrRoomProximity.add(pred);
+		
+		return 1;
+	}
+	
+	private int addNewProjectDescription( String newPredicate )
+	{
+		pred = makePredicate(newPredicate);
+		for( int i = 0; i < arrProjectDescriptions.size(); i++ )
+		{
+			if( pred.toString().compareTo(arrProjectDescriptions.get(i).toString()) == 0 )
+				return 0;
+		}
+		arrProjectDescriptions.add(pred);
 		
 		return 1;
 	}
