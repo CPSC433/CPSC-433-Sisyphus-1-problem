@@ -39,6 +39,42 @@ public class SisyphusI {
 		final String out = fromFile+".out";
 		try {
 			PrintStream outFile = new PrintStream(new FileOutputStream(out));
+			outFile.println( "***Employees***" );
+			for( int i = 0; i < env.arrEmployees.size(); i++ )
+			{
+				outFile.println(env.arrEmployees.get(i).toString());
+			}
+			outFile.println( "***Rooms***" );
+			for( int i = 0; i < env.arrRooms.size(); i++ )
+			{
+				outFile.println(env.arrRooms.get(i).toString());
+			}
+			outFile.println( "***Groups***" );
+			for( int i = 0; i < env.arrGroups.size(); i++ )
+			{
+				outFile.println(env.arrGroups.get(i).toString());
+			}
+			outFile.println( "***Projects***" );
+			for( int i = 0; i < env.arrProjects.size(); i++ )
+			{
+				outFile.println(env.arrProjects.get(i).toString());
+			}
+			outFile.println( "***Room Sizes***" );
+			for( int i = 0; i < env.arrRoomSizes.size(); i++ )
+			{
+				outFile.println(env.arrRoomSizes.get(i).toString());
+			}
+			outFile.println( "***Room Proximity***" );
+			for( int i = 0; i < env.arrRoomProximity.size(); i++ )
+			{
+				outFile.println(env.arrRoomProximity.get(i).toString());
+			}
+			outFile.println( "***Project Descriptions***" );
+			for( int i = 0; i < env.arrProjectDescriptions.size(); i++ )
+			{
+				outFile.println(env.arrProjectDescriptions.get(i).toString());
+			}
+			outFile.println( "***Remaining Predicates***" );
 			for( int i = 0; i < env.arrPredicates.size(); i++ )
 			{
 				outFile.println(env.arrPredicates.get(i).toString());
