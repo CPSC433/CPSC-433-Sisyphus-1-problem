@@ -43,10 +43,16 @@ implements SisyphusPredicates
 	// Stores all project description predicates interpreted from input file
 	public ArrayList<Predicate> arrProjectDescriptions = new ArrayList<Predicate>();
 	
+	// Stores all people in our problem
+	public ArrayList<Person> arrPeople = new ArrayList<Person>();
+	
 	public void a_person(String p)
 	{
 		String newPredicate = "person("+p+")";
 		addNewPredicate( newPredicate );
+		
+		Person newPerson = new Person(p);
+		arrPeople.add(newPerson);
 	}
 	public boolean e_person(String p){return false;}
 	
