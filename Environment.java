@@ -511,4 +511,93 @@ implements SisyphusPredicates
 			arrPeople.add( newPerson );
 		}
 	}	
+	
+	
+	/**Utility Function for environment
+
+*/
+
+/*
+public int utility (Person person, Room room)
+{
+	int count = 0;
+	if (room.shared())
+	{
+		count -= 4;
+		if (person.getIsSmoker() && !(room.getOther(person).getIsSmoker())) count -= 50;
+		if (room.isSmall()) count -= 25;
+		if (person.getProject() == room.getOther(person).getProject()) count -= 7;		
+		if (person.worksWith(room.getOther(person))) count -= 3;
+		if (person.getRole() != eSecretary)
+		{
+			if (person.hacker && !room.getOther(person).hacker) util -= 2;
+			if (!person.hacker && room.getOther(person).hacker) util -= 2;	
+		}
+	}
+	if (person.getRole() == eSecretary && room.getOther(person()).getRole() != eSecretary()) count -= 5;
+	if (person.getRole != eManager)
+	{
+		boolean closeToManager = false;
+		Room temp;
+		for (int i = 0; i < room.getCloseSize() && !closeToManager; i++)
+		{
+			temp = room.getClose(i);
+			if (!temp.shared)
+			{
+				if (temp.getPerson1().getRole() == eManager) closeToManager = true;
+			}
+		}
+		if (!closeToManager) util -= 2;
+	}
+	if (!person.isGroupHead())
+	{
+		boolean closeToHead = false;
+		Room temp;
+		for (int i = 0; i < room.getCloseSize() && !closeToHead; i++)
+		{
+			temp = room.getClose(i);
+			if (!temp.shared)
+			{
+				if (temp.getPerson1().isGroupHead()) closeToHead = true;
+			}
+		}
+		if (!closeToHead) util -= 2;
+		if (!closeToHead && person.isManager()) util -= 20;
+		if (!closeToHead && person.isProjectHead()) util -= 10;
+	}
+	if (!person.isProjectHead())
+	{
+		boolean closeToHead = false;
+		Room temp;
+		for (int i = 0; i < room.getCloseSize() && !closeToHead; i++)
+		{
+			temp = room.getClose(i);
+			if (!temp.shared)
+			{
+				if (temp.getPerson1().isProjectHead()) closeToHead = true;
+			}
+		}
+		if (!closeToHead) util -= 5;
+	}	
+	if (person.isGroupHead() && room.isSmall()) util -= 40;
+	if (person.isGroupHead() || person.getRole())
+	{
+		boolean closeToSecretary = false;
+		Room temp;
+		for (int i = 0; i < room.getCloseSize() && !closeToHead; i++)
+		{
+			temp = room.getClose(i);
+			if (!temp.shared)
+			{
+				if (temp.getPerson1().isSecretary()) closeToSecretary = true;
+			}
+		}
+		if (!closeToSecretary && person.isGroupHead()) util -= 30;
+		if (!closeToSecretary && person.isManager()) util -= 25;
+		if (!closeToSecretary && person.isProjectHead()) util -=10;
+	}
+}
+*/
+	
+	
 }
