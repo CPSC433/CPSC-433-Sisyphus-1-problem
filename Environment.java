@@ -14,6 +14,14 @@ implements SisyphusPredicates
 		super(name);
 	}
 	
+	enum Role
+	{
+		eResearcher,
+		eSecretary,
+		eManager,
+		eNone
+	}
+	
 	private Predicate pred;
 	private int numEmployees = 0;
 	private int numManagers = 0;
