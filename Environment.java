@@ -51,8 +51,7 @@ implements SisyphusPredicates
 		String newPredicate = "person("+p+")";
 		addNewPredicate( newPredicate );
 		
-		Person newPerson = new Person(p);
-		arrPeople.add(newPerson);
+		addPerson( p );
 	}
 	public boolean e_person(String p){return false;}
 	
@@ -98,6 +97,9 @@ implements SisyphusPredicates
 		
 		String newPredicate = "smoker("+p+")";
 		addNewPredicate( newPredicate );
+		
+		Person newPerson = findPerson( p );
+		newPerson.setIsHacker( true );
 	}
 	public boolean e_smoker(String p){return false;}
 	
@@ -107,6 +109,9 @@ implements SisyphusPredicates
 		
 		String newPredicate = "hacker("+p+")";
 		addNewPredicate( newPredicate );
+		
+		Person newPerson = findPerson( p );
+		newPerson.setIsHacker( true );
 	}
 	public boolean e_hacker(String p){return false;}
 	
@@ -115,6 +120,9 @@ implements SisyphusPredicates
 		a_person(p);
 		
 		a_group(grp);
+		
+		Person newPerson = findPerson( p );
+		newPerson.setGroup( grp );
 		
 		String newPredicate = "in-group("+p+", "+grp+")";
 		addNewPredicate( newPredicate );
@@ -125,6 +133,9 @@ implements SisyphusPredicates
 		a_person(p);
 		
 		a_group(grp);
+		
+		Person newPerson = findPerson( p );
+		newPerson.setGroup( grp );
 		
 		String newPredicate = "group("+p+", "+grp+")";
 		addNewPredicate( newPredicate );
@@ -137,6 +148,9 @@ implements SisyphusPredicates
 		
 		a_project(prj);
 		
+		Person newPerson = findPerson( p );
+		newPerson.setProject( prj );
+		
 		String newPredicate = "in-project("+p+", "+prj+")";
 		addNewPredicate( newPredicate );
 	}
@@ -146,6 +160,9 @@ implements SisyphusPredicates
 		a_person(p);
 		
 		a_project(prj);
+		
+		Person newPerson = findPerson( p );
+		newPerson.setProject( prj );
 		
 		String newPredicate = "project("+p+", "+prj+")";
 		addNewPredicate( newPredicate );
@@ -158,6 +175,9 @@ implements SisyphusPredicates
 		
 		a_group(p, grp);
 		
+		Person newPerson = findPerson( p );
+		newPerson.setIsGroupHead( true );
+		
 		String newPredicate = "heads-group("+p+", "+grp+")";
 		addNewPredicate( newPredicate );
 	}
@@ -168,6 +188,9 @@ implements SisyphusPredicates
 		a_person(p);
 		
 		a_project(p, prj);
+		
+		Person newPerson = findPerson( p );
+		newPerson.setIsProjectHead( true );
 		
 		String newPredicate = "heads-project("+p+", "+prj+")";
 		addNewPredicate( newPredicate );
@@ -198,6 +221,9 @@ implements SisyphusPredicates
 		
 			a_works_with(p, p2);
 			
+			Person newPerson = findPerson( p );
+			newPerson.addWorksWith( p2 );
+			
 			p3 += p2;
 		}
 		p3 += "})";
@@ -215,8 +241,14 @@ implements SisyphusPredicates
 		String newPredicate = "works-with("+p+", "+p2+")";
 		addNewPredicate( newPredicate );
 		
+		Person newPerson = findPerson( p );
+		newPerson.addWorksWith( p2 );
+		
 		newPredicate = "works-with("+p2+", "+p+")";
 		addNewPredicate( newPredicate );
+		
+		newPerson = findPerson( p2 );
+		newPerson.addWorksWith( p );
 	}
 	public boolean e_works_with(String p, String p2){return false;}
 	
@@ -236,7 +268,7 @@ implements SisyphusPredicates
 	{
 		String newPredicate = "room("+r+")";
 		int ret = addNewRoom( newPredicate );
-		
+
 		if( ret == 1 )
 			numRooms++;
 	}	
@@ -450,4 +482,25 @@ implements SisyphusPredicates
 		else
 			return false;
 	}
+	
+	public Person findPerson( String name )
+	{
+		Person newPerson = null;
+		for( int i = 0; i < arrPeople.size(); i++ )
+		{
+			newPerson = arrPeople.get(i);
+			if( newPerson.getName().equals(name) )
+				return newPerson;
+		}
+		return null;
+	}
+	
+	public void addPerson( String name )
+	{
+		if( findPerson( name ) == null )
+		{
+			Person newPerson = new Person( name );
+			arrPeople.add( newPerson );
+		}
+	}	
 }
