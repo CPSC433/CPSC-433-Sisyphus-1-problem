@@ -74,6 +74,16 @@ public class SisyphusI {
 			{
 				outFile.println(env.arrProjectDescriptions.get(i).toString());
 			}
+			outFile.println( "***People Predicates***" );
+			for( int i = 0; i < env.arrPeople.size(); i++ )
+			{
+				outFile.println(env.arrPeople.get(i).getName());
+				outFile.println(env.arrPeople.get(i).getGroup());
+				outFile.println(env.arrPeople.get(i).getProject());
+				//outFile.println(env.arrPeople.get(i).getName());
+				//outFile.println(env.arrPeople.get(i).getName());
+				//outFile.println(env.arrPeople.get(i).getName());
+			}
 			outFile.println( "***Remaining Predicates***" );
 			for( int i = 0; i < env.arrPredicates.size(); i++ )
 			{
