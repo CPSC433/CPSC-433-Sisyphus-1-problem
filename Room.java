@@ -17,6 +17,16 @@ public class Room
 		occupants.add(null);
 	}
 	
+	public int getCloseRoomsize()
+	{
+		return close_to.size();
+	}
+	
+	public room getClose(int i)
+	{
+		return close_to[i];
+	}
+	
 	public boolean getIsSmall()
 	{
 		return isSmall;
