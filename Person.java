@@ -11,6 +11,8 @@ public class Person
 	private String project;
 	private boolean isProjectHead;
 	private boolean isGroupHead;
+	private boolean isManager;
+	private boolean isResearcher;
 	private boolean isHacker;
 	private boolean isSmoker;
 	private ArrayList<String> arrWorksWith = new ArrayList<String>();
@@ -48,6 +50,16 @@ public class Person
 	public boolean getIsGroupHead()
 	{
 		return isGroupHead;
+	}
+	
+	public boolean getIsManager()
+	{
+		return isManager;
+	}
+	
+	public boolean getIsResearcher()
+	{
+		return isResearcher;
 	}
 	
 	public boolean getIsProjectHead()
@@ -95,6 +107,16 @@ public class Person
 	public void setIsSmoker( boolean b )
 	{
 		isSmoker = b;
+	}
+	
+	public void setIsManager( boolean b )
+	{
+		isManager = b;
+	}
+	
+	public void setIsResearcher( boolean b )
+	{
+		isResearcher = b;
 	}
 	
 	public void addWorksWith( String name )
