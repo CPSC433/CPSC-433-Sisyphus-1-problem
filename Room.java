@@ -7,7 +7,7 @@ public class Room
 	private String name;
 	private ArrayList<Person> occupants;
 	private ArrayList<Room> close_to;
-	
+	private boolean isSmall;
 	
 	
 	public Room(String roomName) 
@@ -15,6 +15,16 @@ public class Room
 		name = roomName;
 		occupants.add(null);
 		occupants.add(null);
+	}
+	
+	public boolean getIsSmall()
+	{
+		return isSmall;
+	}
+	
+	public void setIsSmall(boolean b)
+	{
+		isSmall = b;
 	}
 	
 	public boolean isShared() {
