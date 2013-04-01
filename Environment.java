@@ -525,16 +525,16 @@ public int utility (Person person, Room room)
 	{
 		count -= 4;
 		if (person.getIsSmoker() && !(room.getOther(person).getIsSmoker())) count -= 50;
-		if (room.isSmall()) count -= 25;
+		if (room.getIsSmall()) count -= 25;
 		if (person.getProject() == room.getOther(person).getProject()) count -= 7;		
 		if (person.worksWith(room.getOther(person))) count -= 3;
-		if (person.getRole() != eSecretary)
+		if (!person.getIsSecretary)
 		{
-			if (person.hacker && !room.getOther(person).hacker) util -= 2;
-			if (!person.hacker && room.getOther(person).hacker) util -= 2;	
+			if (person.getIsHacker && !room.getOther(person).getIsHacker) util -= 2;
+			if (!person.getIsHacker && room.getOther(person).getIsHacker) util -= 2;	
 		}
 	}
-	if (person.getRole() == eSecretary && room.getOther(person()).getRole() != eSecretary()) count -= 5;
+	if (person.getIsSecretary && !room.getOther(person()).getIsSecretary != eSecretary()) count -= 5;
 	if (person.getRole != eManager)
 	{
 		boolean closeToManager = false;
@@ -549,7 +549,7 @@ public int utility (Person person, Room room)
 		}
 		if (!closeToManager) util -= 2;
 	}
-	if (!person.isGroupHead())
+	if (!person.getIsGroupHead())
 	{
 		boolean closeToHead = false;
 		Room temp;
@@ -558,12 +558,12 @@ public int utility (Person person, Room room)
 			temp = room.getClose(i);
 			if (!temp.shared)
 			{
-				if (temp.getPerson1().isGroupHead()) closeToHead = true;
+				if (temp.getPerson1().getIsGroupHead()) closeToHead = true;
 			}
 		}
 		if (!closeToHead) util -= 2;
-		if (!closeToHead && person.isManager()) util -= 20;
-		if (!closeToHead && person.isProjectHead()) util -= 10;
+		if (!closeToHead && person.getIsManager()) util -= 20;
+		if (!closeToHead && person.getIsProjectHead()) util -= 10;
 	}
 	if (!person.isProjectHead())
 	{
@@ -574,27 +574,27 @@ public int utility (Person person, Room room)
 			temp = room.getClose(i);
 			if (!temp.shared)
 			{
-				if (temp.getPerson1().isProjectHead()) closeToHead = true;
+				if (temp.getPerson1().getIsProjectHead()) closeToHead = true;
 			}
 		}
 		if (!closeToHead) util -= 5;
 	}	
-	if (person.isGroupHead() && room.isSmall()) util -= 40;
-	if (person.isGroupHead() || person.getRole())
+	if (person.getIsGroupHead() && room.isSmall()) util -= 40;
+	if (person.getIsGroupHead() || person.getIsProjectHead() || person.getIsManager)
 	{
 		boolean closeToSecretary = false;
 		Room temp;
-		for (int i = 0; i < room.getCloseSize() && !closeToHead; i++)
+		for (int i = 0; i < room.getCloseSize() && !closeToSecretary; i++)
 		{
 			temp = room.getClose(i);
 			if (!temp.shared)
 			{
-				if (temp.getPerson1().isSecretary()) closeToSecretary = true;
+				if (temp.getPerson1().getIsSecretary()) closeToSecretary = true;
 			}
 		}
-		if (!closeToSecretary && person.isGroupHead()) util -= 30;
-		if (!closeToSecretary && person.isManager()) util -= 25;
-		if (!closeToSecretary && person.isProjectHead()) util -=10;
+		if (!closeToSecretary && person.getIsGroupHead()) util -= 30;
+		if (!closeToSecretary && person.getIsManager()) util -= 25;
+		if (!closeToSecretary && person.getIsProjectHead()) util -=10;
 	}
 }
 */
