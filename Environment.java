@@ -569,9 +569,9 @@ public int utility (Person person, Room room)
 	{
 		boolean closeToHead = false;
 		Room temp;
-		for (int i = 0; i < room.close_to.size() && !closeToHead; i++)
+		for (int i = 0; i < room.getCloseSize() && !closeToHead; i++)
 		{
-			temp = room.close_to.get(i);
+			temp = room.getClose(i);
 			if (!temp.shared)
 			{
 				if (temp.getPerson1().getIsProjectHead()) closeToHead = true;
@@ -584,9 +584,9 @@ public int utility (Person person, Room room)
 	{
 		boolean closeToSecretary = false;
 		Room temp;
-		for (int i = 0; i < room.close_to.size() && !closeToSecretary; i++)
+		for (int i = 0; i < room.getCloseSize() && !closeToSecretary; i++)
 		{
-			temp = room.close_to.get(i);
+			temp = room.getClose(i);
 			if (!temp.shared)
 			{
 				if (temp.getPerson1().getIsSecretary()) closeToSecretary = true;
