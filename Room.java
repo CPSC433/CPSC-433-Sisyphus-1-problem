@@ -37,6 +37,15 @@ public class Room
 		isSmall = b;
 	}
 	
+	public void setOccupant(Person person) {
+		if (occupants.get(0) == null)
+			occupants.set(0) = person;
+		else if (occupants.get (1) == null)
+			occupants.set(1) = person;
+		else
+			//dunno?
+	}
+	
 	public boolean isShared() {
 		if ((occupants.get(0) == null) || (occupants.get(1) == null))
 			return false;
