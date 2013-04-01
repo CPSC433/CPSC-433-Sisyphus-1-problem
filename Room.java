@@ -27,6 +27,10 @@ public class Room
 		return close_to[i];
 	}
 	
+	public void setClose(Room room) {
+		close_to.add(room);
+	}
+	
 	public boolean getIsSmall()
 	{
 		return isSmall;
