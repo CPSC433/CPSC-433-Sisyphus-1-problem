@@ -15,6 +15,7 @@ public class Person
 	private boolean isResearcher;
 	private boolean isHacker;
 	private boolean isSmoker;
+	private boolean isSecretary;
 	private ArrayList<String> arrWorksWith = new ArrayList<String>();
 	Role role;
 	
@@ -27,6 +28,9 @@ public class Person
 		isGroupHead = false;
 		isHacker = false;
 		isSmoker = false;
+		isManager = false;
+		isResearcher = false;
+		isSecretary = false;
 		role = Role.eNone;
 	}
 	
@@ -55,6 +59,11 @@ public class Person
 	public boolean getIsManager()
 	{
 		return isManager;
+	}
+	
+	public boolean getIsSecretary()
+	{
+		return isSecretary;
 	}
 	
 	public boolean getIsResearcher()
@@ -114,6 +123,10 @@ public class Person
 		isManager = b;
 	}
 	
+	public void setIsSecretary( boolean b )
+	{
+		isSecretary = b;
+	}	
 	public void setIsResearcher( boolean b )
 	{
 		isResearcher = b;
