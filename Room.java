@@ -8,6 +8,7 @@ public class Room
 	private ArrayList<Person> occupants;
 	private ArrayList<Room> close_to;
 	private boolean isSmall;
+	private int num_occupants;
 	
 	
 	public Room(String roomName) 
@@ -15,6 +16,7 @@ public class Room
 		name = roomName;
 		occupants.add(null);
 		occupants.add(null);
+		num_occupants = 0;
 	}
 	
 	public int getCloseRoomsize()
@@ -22,9 +24,9 @@ public class Room
 		return close_to.size();
 	}
 	
-	public room getClose(int i)
+	public Room getClose(int i)
 	{
-		return close_to[i];
+		return close_to.get(i);
 	}
 	
 	public void setClose(Room room) {
@@ -43,11 +45,9 @@ public class Room
 	
 	public void setOccupant(Person person) {
 		if (occupants.get(0) == null)
-			occupants.set(0) = person;
+			occupants.set(0, person);
 		else if (occupants.get (1) == null)
-			occupants.set(1) = person;
-		else
-			//dunno?
+			occupants.set(1, person);
 	}
 	
 	public boolean isShared() {
@@ -64,7 +64,6 @@ public class Room
 			else
 				return occupants.get(1);
 		}
-		else
-			
+		return null;	
 	}
 }
