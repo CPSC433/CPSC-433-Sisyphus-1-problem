@@ -509,7 +509,7 @@ implements SisyphusPredicates
 
 */
 
-/*
+
 public int utility (Person person, Room room)
 {
 	int count = 0;
@@ -589,7 +589,7 @@ public int utility (Person person, Room room)
 		if (!closeToSecretary && person.getIsProjectHead()) util -=10;
 	}
 }
-*/
+
 	
 	
 }
