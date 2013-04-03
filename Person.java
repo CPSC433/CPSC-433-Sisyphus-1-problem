@@ -32,6 +32,15 @@ public class Person
 	
 	// Getters
 	
+	public Boolean workswith(Person person){
+		boolean works = false;
+		for (int i = 0; i < arrWorksWith.size() && !works; i++){
+			if (arrWorksWith[i].getName() == person.getName()) works = true;
+		} 
+	}
+	
+	
+	
 	public String getName()
 	{
 		return name;
