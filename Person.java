@@ -2,8 +2,6 @@ package cpsc433;
 
 import java.util.ArrayList;
 
-import cpsc433.Environment.Role;
-
 public class Person 
 {
 	private String name;
@@ -17,7 +15,6 @@ public class Person
 	private boolean isSmoker;
 	private boolean isSecretary;
 	private ArrayList<String> arrWorksWith = new ArrayList<String>();
-	Role role;
 	
 	public Person(String personName) 
 	{
@@ -31,7 +28,6 @@ public class Person
 		isManager = false;
 		isResearcher = false;
 		isSecretary = false;
-		role = Role.eNone;
 	}
 	
 	// Getters
