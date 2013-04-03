@@ -50,11 +50,25 @@ public class Room
 			occupants.set(1, person);
 	}
 	
+	public Person getOccupant(int i) {
+		Person person = occupants.get(i);
+		return person;
+	}
+	
+	// Maybe we should make a function that instead returns # of people in the room to replace the two functions below
+	
+	public boolean isEmpty() {
+		if ((occupants.get(0) == null) && (occupants.get(1) == null))
+			return true;
+		else return false;
+	}
+	
 	public boolean isShared() {
 		if ((occupants.get(0) == null) || (occupants.get(1) == null))
 			return false;
-		else
-			return true;
+		else if (this.isEmpty())
+			return false;
+		else return true;
 	}
 	
 	public Person getOther(Person person1) {
