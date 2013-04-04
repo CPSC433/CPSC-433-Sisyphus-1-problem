@@ -3,6 +3,8 @@ package cpsc433;
 import java.util.TreeSet;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import cpsc433.Predicate.ParamType;
 
@@ -34,7 +36,7 @@ implements SisyphusPredicates
 	public ArrayList<Predicate> arrEmployees = new ArrayList<Predicate>();
 	
 	// Stores all room predicates interpreted from input file
-	public ArrayList<Predicate> arrRooms = new ArrayList<Predicate>();
+	public ArrayList<Predicate> arrRoomPreds = new ArrayList<Predicate>();
 	
 	// Stores all group predicates interpreted from input file
 	public ArrayList<Predicate> arrGroups = new ArrayList<Predicate>();
@@ -53,6 +55,10 @@ implements SisyphusPredicates
 	
 	// Stores all people in our problem
 	public ArrayList<Person> arrPeople = new ArrayList<Person>();
+	
+	public ArrayList<Room> arrRooms = new ArrayList<Room>();
+	
+	public Map<Person,Room> assignmentMap = new HashMap<Person, Room>();
 	
 	public void a_person(String p)
 	{
@@ -278,7 +284,10 @@ implements SisyphusPredicates
 		int ret = addNewRoom( newPredicate );
 
 		if( ret == 1 )
+		{
 			numRooms++;
+			addRoom( r );
+		}
 	}	
 	public boolean e_room(String r){return false;}
 	
@@ -408,12 +417,12 @@ implements SisyphusPredicates
 	private int addNewRoom( String newPredicate )
 	{
 		pred = makePredicate(newPredicate);
-		for( int i = 0; i < arrRooms.size(); i++ )
+		for( int i = 0; i < arrRoomPreds.size(); i++ )
 		{
-			if( pred.toString().compareTo(arrRooms.get(i).toString()) == 0 )
+			if( pred.toString().compareTo(arrRoomPreds.get(i).toString()) == 0 )
 				return 0;
 		}
-		arrRooms.add(pred);
+		arrRoomPreds.add(pred);
 		
 		return 1;
 	}
@@ -512,6 +521,27 @@ implements SisyphusPredicates
 		}
 	}	
 	
+	public Room findRoom( String name )
+	{
+		Room newRoom = null;
+		for( int i = 0; i < arrRooms.size(); i++ )
+		{
+			newRoom = arrRooms.get(i);
+			if( newRoom.getName().equals(name) )
+				return newRoom;
+		}
+		return null;
+	}
+	
+	public void addRoom( String name )
+	{
+		if( findRoom( name ) == null )
+		{
+			Room newRoom = new Room( name );
+			arrRooms.add( newRoom );
+		}
+	}	
+	
 	
 	/**Utility Function for environment
 
@@ -601,5 +631,44 @@ public int utility (Person person, Room room)
 	}
 	return util;
 }
+	
+	public void findSolution()
+	{
+		for( int i = 0; i < arrPeople.size(); i++ )
+		{
+			Person currentPerson = arrPeople.get(i);
+			ArrayList<Integer> arrUtil = new ArrayList<Integer>();
+			
+			for( int j = 0; j < arrRooms.size(); j++ )
+			{
+				if( currentPerson.getIsManager() && !arrRooms.get(j).isEmpty() )
+					arrUtil.add(-1000);
+				
+				else
+					arrUtil.add(utility( currentPerson, arrRooms.get(j) ));
+			}
+			
+			int highestUtil = -1000;
+			int index = 0;
+			for( int j = 0; j < arrUtil.size(); j++ )
+			{
+				int util = arrUtil.get(j);
+				if( util > highestUtil )
+				{
+					highestUtil = util;
+					index = j;
+				}
+			}
+
+			assignmentMap.put(currentPerson, arrRooms.get(index));
+			arrRooms.get(index).setOccupant( currentPerson );
+			
+			System.out.println( currentPerson.getName() + "  " + arrRooms.get(index).getName() );
+			
+			if( currentPerson.getIsManager() || arrRooms.get(index).isShared() )
+				arrRooms.remove(index);
+
+		}
+	}
 	
 }
