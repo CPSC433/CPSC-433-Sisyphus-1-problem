@@ -14,9 +14,16 @@ public class Room
 	public Room(String roomName) 
 	{
 		name = roomName;
+		occupants = new ArrayList<Person>();
+		close_to = new ArrayList<Room>();
 		occupants.add(null);
 		occupants.add(null);
 		num_occupants = 0;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 	
 	public int getCloseRoomsize()
@@ -64,11 +71,10 @@ public class Room
 	}
 	
 	public boolean isShared() {
-		if ((occupants.get(0) == null) || (occupants.get(1) == null))
-			return false;
-		else if (this.isEmpty())
-			return false;
-		else return true;
+		if ((occupants.get(0) != null) && (occupants.get(1) != null))
+			return true;
+		
+		return false;
 	}
 	
 	public Person getOther(Person person1) {
