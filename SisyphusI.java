@@ -3,7 +3,6 @@ package cpsc433;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-
 /**
  * 
  * <p>Copyright: Copyright (c) 2003-2013, Department of Computer Science, University 
@@ -89,6 +88,7 @@ public class SisyphusI {
 			{
 				outFile.println(env.arrPredicates.get(i).toString());
 			}
+			env.findSolution();
 			outFile.close();
 		} catch (Exception ex) {}
 		
