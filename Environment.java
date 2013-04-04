@@ -534,7 +534,7 @@ public int utility (Person person, Room room)
 			if (!person.getIsHacker() && room.getOther(person).getIsHacker()) util -= 2;	
 		}
 	}
-	if (person.getIsSecretary() && !room.getOther(person()).getIsSecretary != eSecretary()) util -= 5;
+	if (person.getIsSecretary() && !room.getOther(person).getIsSecretary() != true) util -= 5;
 	if (!person.getIsManager())
 	{
 		boolean closeToManager = false;
@@ -599,8 +599,7 @@ public int utility (Person person, Room room)
 		if (!closeToSecretary && person.getIsManager()) util -= 25;
 		if (!closeToSecretary && person.getIsProjectHead()) util -=10;
 	}
+	return util;
 }
-
-	
 	
 }
