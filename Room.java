@@ -8,6 +8,8 @@ public class Room
 	private ArrayList<Person> occupants;
 	private ArrayList<Room> close_to;
 	private boolean isSmall;
+	private boolean isMedium;
+	private boolean isLarge;
 	private int num_occupants;
 	
 	
@@ -19,6 +21,9 @@ public class Room
 		occupants.add(null);
 		occupants.add(null);
 		num_occupants = 0;
+		isSmall = false;
+		isMedium = false;
+		isLarge = false;
 	}
 	
 	public String getName()
@@ -48,6 +53,26 @@ public class Room
 	public void setIsSmall(boolean b)
 	{
 		isSmall = b;
+	}
+	
+	public boolean getIsMedium()
+	{
+		return isMedium;
+	}
+	
+	public void setIsMedium(boolean b)
+	{
+		isMedium = b;
+	}
+	
+	public boolean getIsLarge()
+	{
+		return isLarge;
+	}
+	
+	public void setIsLarge(boolean b)
+	{
+		isLarge = b;
 	}
 	
 	public void setOccupant(Person person) {
