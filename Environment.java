@@ -76,6 +76,9 @@ implements SisyphusPredicates
 		String newPredicate = "secretary("+p+")";
 		int ret = addNewEmployee( newPredicate );
 		
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setIsSecretary(true);
+		
 		if( ret == 1 )
 			numEmployees++;
 	}
@@ -87,6 +90,9 @@ implements SisyphusPredicates
 		
 		String newPredicate = "researcher("+p+")";
 		int ret = addNewEmployee( newPredicate );
+		
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setIsResearcher(true);
 		
 		if( ret == 1 )
 			numEmployees++;
@@ -100,6 +106,9 @@ implements SisyphusPredicates
 		String newPredicate = "manager("+p+")";
 		int ret = addNewEmployee( newPredicate );
 		
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setIsManager(true);
+		
 		if( ret == 1 )
 			numManagers++;
 	}
@@ -112,8 +121,8 @@ implements SisyphusPredicates
 		String newPredicate = "smoker("+p+")";
 		addNewPredicate( newPredicate );
 		
-		Person newPerson = findPerson( p );
-		newPerson.setIsHacker( true );
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setIsSmoker(true);
 	}
 	public boolean e_smoker(String p){return false;}
 	
@@ -124,8 +133,8 @@ implements SisyphusPredicates
 		String newPredicate = "hacker("+p+")";
 		addNewPredicate( newPredicate );
 		
-		Person newPerson = findPerson( p );
-		newPerson.setIsHacker( true );
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setIsHacker(true);
 	}
 	public boolean e_hacker(String p){return false;}
 	
@@ -135,8 +144,8 @@ implements SisyphusPredicates
 		
 		a_group(grp);
 		
-		Person newPerson = findPerson( p );
-		newPerson.setGroup( grp );
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setGroup(p);
 		
 		String newPredicate = "in-group("+p+", "+grp+")";
 		addNewPredicate( newPredicate );
@@ -148,8 +157,8 @@ implements SisyphusPredicates
 		
 		a_group(grp);
 		
-		Person newPerson = findPerson( p );
-		newPerson.setGroup( grp );
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setGroup(grp);
 		
 		String newPredicate = "group("+p+", "+grp+")";
 		addNewPredicate( newPredicate );
@@ -162,8 +171,8 @@ implements SisyphusPredicates
 		
 		a_project(prj);
 		
-		Person newPerson = findPerson( p );
-		newPerson.setProject( prj );
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setProject(prj);
 		
 		String newPredicate = "in-project("+p+", "+prj+")";
 		addNewPredicate( newPredicate );
@@ -175,8 +184,8 @@ implements SisyphusPredicates
 		
 		a_project(prj);
 		
-		Person newPerson = findPerson( p );
-		newPerson.setProject( prj );
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setProject(prj);
 		
 		String newPredicate = "project("+p+", "+prj+")";
 		addNewPredicate( newPredicate );
@@ -189,8 +198,8 @@ implements SisyphusPredicates
 		
 		a_group(p, grp);
 		
-		Person newPerson = findPerson( p );
-		newPerson.setIsGroupHead( true );
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setIsGroupHead(true);
 		
 		String newPredicate = "heads-group("+p+", "+grp+")";
 		addNewPredicate( newPredicate );
@@ -203,8 +212,8 @@ implements SisyphusPredicates
 		
 		a_project(p, prj);
 		
-		Person newPerson = findPerson( p );
-		newPerson.setIsProjectHead( true );
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).setIsProjectHead(true);
 		
 		String newPredicate = "heads-project("+p+", "+prj+")";
 		addNewPredicate( newPredicate );
@@ -235,9 +244,6 @@ implements SisyphusPredicates
 		
 			a_works_with(p, p2);
 			
-			Person newPerson = findPerson( p );
-			newPerson.addWorksWith( p2 );
-			
 			p3 += p2;
 		}
 		p3 += "})";
@@ -255,14 +261,14 @@ implements SisyphusPredicates
 		String newPredicate = "works-with("+p+", "+p2+")";
 		addNewPredicate( newPredicate );
 		
-		Person newPerson = findPerson( p );
-		newPerson.addWorksWith( p2 );
+		int personIndex = findPersonIndex( p );
+		arrPeople.get(personIndex).addWorksWith(p2);
 		
 		newPredicate = "works-with("+p2+", "+p+")";
 		addNewPredicate( newPredicate );
 		
-		newPerson = findPerson( p2 );
-		newPerson.addWorksWith( p );
+		personIndex = findPersonIndex( p2 );
+		arrPeople.get(personIndex).addWorksWith(p);
 	}
 	public boolean e_works_with(String p, String p2){return false;}
 	
@@ -300,8 +306,16 @@ implements SisyphusPredicates
 		String newPredicate = "close("+room+", "+room2+")";
 		addNewRoomProximity( newPredicate );
 		
+		int roomIndex = findRoomIndex( room );
+		Room newRoom = findRoom( room2 );
+		arrRooms.get(roomIndex).setClose(newRoom);
+		
 		newPredicate = "close("+room2+", "+room+")";
 		addNewRoomProximity( newPredicate );
+		
+		roomIndex = findRoomIndex( room2 );
+		newRoom = findRoom( room );
+		arrRooms.get(roomIndex).setClose(newRoom);
 	}	
 	public boolean e_close(String room, String room2){return false;}
 	
@@ -343,6 +357,9 @@ implements SisyphusPredicates
 		
 		String newPredicate = "large-room("+r+")";
 		addNewRoomSize( newPredicate );
+		
+		int roomIndex = findRoomIndex( r );
+		arrRooms.get(roomIndex).setIsLarge(true);
 	}
 	public boolean e_large_room(String r){return false;}
 	
@@ -352,6 +369,9 @@ implements SisyphusPredicates
 		
 		String newPredicate = "medium-room("+r+")";
 		addNewRoomSize( newPredicate );
+		
+		int roomIndex = findRoomIndex( r );
+		arrRooms.get(roomIndex).setIsMedium(true);
 	}
 	public boolean e_medium_room(String r){return false;}
 	
@@ -361,6 +381,9 @@ implements SisyphusPredicates
 		
 		String newPredicate = "small-room("+r+")";
 		addNewRoomSize( newPredicate );
+		
+		int roomIndex = findRoomIndex( r );
+		arrRooms.get(roomIndex).setIsSmall(true);
 	}
 	public boolean e_small_room(String r){return false;}
 	
@@ -512,6 +535,18 @@ implements SisyphusPredicates
 		return null;
 	}
 	
+	public int findPersonIndex( String name )
+	{
+		Person newPerson = null;
+		for( int i = 0; i < arrPeople.size(); i++ )
+		{
+			newPerson = arrPeople.get(i);
+			if( newPerson.getName().equals(name) )
+				return i;
+		}
+		return -1;
+	}
+	
 	public void addPerson( String name )
 	{
 		if( findPerson( name ) == null )
@@ -531,6 +566,18 @@ implements SisyphusPredicates
 				return newRoom;
 		}
 		return null;
+	}
+	
+	public int findRoomIndex( String name )
+	{
+		Room newRoom = null;
+		for( int i = 0; i < arrRooms.size(); i++ )
+		{
+			newRoom = arrRooms.get(i);
+			if( newRoom.getName().equals(name) )
+				return i;
+		}
+		return -1;
 	}
 	
 	public void addRoom( String name )
