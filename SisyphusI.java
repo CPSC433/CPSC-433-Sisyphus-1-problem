@@ -23,6 +23,7 @@ public class SisyphusI {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		long startTime = System.currentTimeMillis();
 		
 		Environment env = new Environment("PredicateReader");
 		String fromFile = null;
@@ -96,6 +97,9 @@ public class SisyphusI {
 			System.out.println("There is a valid solution for this input");
 		else
 			System.out.println("There is not a valid solution for this input");
+			
+		// For testing only - REMOVE THIS
+		System.out.println("Total time: " + (System.currentTimeMillis() - startTime) + "ms");
 		/*
 
 		Thread shutdownHookThread = new Thread("SisyphusIShutdownHook")
