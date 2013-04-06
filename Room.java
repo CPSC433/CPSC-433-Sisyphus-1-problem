@@ -103,7 +103,7 @@ public class Room
 	}
 	
 	public Person getOther(Person person1) {
-		if (num_occupants == 2) {
+		if (occupants.size() == 2) {
 			if (occupants.get(0) != person1)
 				return occupants.get(0);
 			else
