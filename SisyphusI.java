@@ -23,6 +23,7 @@ public class SisyphusI {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
 		long startTime = System.currentTimeMillis();
 		
 		Environment env = new Environment("PredicateReader");
@@ -89,7 +90,10 @@ public class SisyphusI {
 			{
 				outFile.println(env.arrPredicates.get(i).toString());
 			}
-			env.findSolution();
+			//env.findSolution();
+			env.makeSolution();
+			int totalUtil = env.calcTotalUtility();
+			System.out.println( totalUtil );
 			outFile.close();
 		} catch (Exception ex) {}
 		
@@ -97,8 +101,7 @@ public class SisyphusI {
 			System.out.println("There is a valid solution for this input");
 		else
 			System.out.println("There is not a valid solution for this input");
-			
-		// For testing only - REMOVE THIS
+		
 		System.out.println("Total time: " + (System.currentTimeMillis() - startTime) + "ms");
 		/*
 
