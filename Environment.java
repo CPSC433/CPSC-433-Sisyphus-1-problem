@@ -12,8 +12,13 @@ public class Environment
 extends PredicateReader
 implements SisyphusPredicates 
 {
+  private int[] con ;
   public Environment(String name) {
 		super(name);
+		con = int[16];
+		for(int i = 0; i < 16; i++){
+			con[i] = 0;
+		}
 	}
 	
 	enum Role
@@ -602,17 +607,18 @@ public int utility (Person person, Room room)
 	if (room.isShared())
 	{
 		util -= 4;
-		if (person.getIsSmoker() && !(room.getOther(person).getIsSmoker())) util -= 50;
-		if (room.getIsSmall()) util -= 25;
-		if (person.getProject().equals(room.getOther(person).getProject())) util -= 7;	
-		if (person.worksWith(room.getOther(person))) util -= 3;
+		con[13]++;
+		if (person.getIsSmoker() && !(room.getOther(person).getIsSmoker())) {util -= 50; con[10]++;}
+		if (room.getIsSmall()) {util -= 25; con[15]++;}
+		if (person.getProject().equals(room.getOther(person).getProject())) {util -= 7; con[11]++;}	
+		if (person.worksWith(room.getOther(person))) {util -= 3; con[14]++;}
 		if (!person.getIsSecretary())
 		{
-			if (person.getIsHacker() && !room.getOther(person).getIsHacker()) util -= 2;
-			if (!person.getIsHacker() && room.getOther(person).getIsHacker()) util -= 2;	
+			if (person.getIsHacker() && !room.getOther(person).getIsHacker()) {util -= 2, con[12]++;}
+			if (!person.getIsHacker() && room.getOther(person).getIsHacker()) {util -= 2; con[12]++;}	
 		}
 	}
-	if (person.getIsSecretary() && room.isShared() && !room.getOther(person).getIsSecretary() != true) util -= 5;
+	if (person.getIsSecretary() && room.isShared() && !room.getOther(person).getIsSecretary() != true) {util -= 5; con[3]++}
 	if (!person.getIsManager())
 	{
 		boolean closeToManager = false;
@@ -625,7 +631,7 @@ public int utility (Person person, Room room)
 				if (temp.getOccupant(0).getIsManager()) closeToManager = true;
 			}
 		}
-		if (!closeToManager) util -= 2;
+		if (!closeToManager) {util -= 2; con[1]++;}
 	}
 	if (!person.getIsGroupHead())
 	{
@@ -639,9 +645,9 @@ public int utility (Person person, Room room)
 				if (temp.getOccupant(0).getIsGroupHead()) closeToHead = true;
 			}
 		}
-		if (!closeToHead) util -= 2;
-		if (!closeToHead && person.getIsManager()) util -= 20;
-		if (!closeToHead && person.getIsProjectHead()) util -= 10;
+		if (!closeToHead) {util -= 2; con[6]++;}
+		if (!closeToHead && person.getIsManager()) {util -= 20; con[5]++;}
+		if (!closeToHead && person.getIsProjectHead()) {util -= 10; con[9]++;}
 	}
 	if (!person.getIsProjectHead())
 	{
@@ -655,9 +661,9 @@ public int utility (Person person, Room room)
 				if (temp.getOccupant(0).getIsProjectHead()) closeToHead = true;
 			}
 		}
-		if (!closeToHead) util -= 5;
+		if (!closeToHead) {util -= 5; con[7]++};
 	}	
-	if (person.getIsGroupHead() && room.getIsSmall()) util -= 40;
+	if (person.getIsGroupHead() && room.getIsSmall()) {util -= 40; con[0]++}
 	if (person.getIsGroupHead() || person.getIsProjectHead() || person.getIsManager())
 	{
 		boolean closeToSecretary = false;
@@ -673,9 +679,9 @@ public int utility (Person person, Room room)
 				if (temp.getOccupant(1).getIsSecretary()) closeToSecretary = true;
 			}
 		}
-		if (!closeToSecretary && person.getIsGroupHead()) util -= 30;
-		if (!closeToSecretary && person.getIsManager()) util -= 25;
-		if (!closeToSecretary && person.getIsProjectHead()) util -=10;
+		if (!closeToSecretary && person.getIsGroupHead()) {util -= 30; con[2]++};
+		if (!closeToSecretary && person.getIsManager()) {util -= 20; con[4]++};
+		if (!closeToSecretary && person.getIsProjectHead()) {util -=10; con[8]++};
 	}
 	return util;
 }
@@ -735,6 +741,15 @@ public int utility (Person person, Room room)
 		}
 		return totalUtil;
 	}
+	
+	
+	public void printConstriants(){
+		for (int i = 0; i < 16; i++)
+		{
+			System.out.println(con[i]);
+		}
+	}
+	
 	
 	public void makeSolution()
 	{
