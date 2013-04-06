@@ -59,6 +59,7 @@ implements SisyphusPredicates
 	public ArrayList<Room> arrRooms = new ArrayList<Room>();
 	
 	public Map<Person,Room> assignmentMap = new HashMap<Person, Room>();
+	public Map<Person,Room> assignmentMap2 = new HashMap<Person, Room>();
 	
 	public void a_person(String p)
 	{
@@ -603,7 +604,7 @@ public int utility (Person person, Room room)
 		util -= 4;
 		if (person.getIsSmoker() && !(room.getOther(person).getIsSmoker())) util -= 50;
 		if (room.getIsSmall()) util -= 25;
-		if (person.getProject() == room.getOther(person).getProject()) util -= 7;		
+		if (person.getProject().equals(room.getOther(person).getProject())) util -= 7;	
 		if (person.worksWith(room.getOther(person))) util -= 3;
 		if (!person.getIsSecretary())
 		{
@@ -611,7 +612,7 @@ public int utility (Person person, Room room)
 			if (!person.getIsHacker() && room.getOther(person).getIsHacker()) util -= 2;	
 		}
 	}
-	if (person.getIsSecretary() && !room.getOther(person).getIsSecretary() != true) util -= 5;
+	if (person.getIsSecretary() && room.isShared() && !room.getOther(person).getIsSecretary() != true) util -= 5;
 	if (!person.getIsManager())
 	{
 		boolean closeToManager = false;
@@ -619,7 +620,7 @@ public int utility (Person person, Room room)
 		for (int i = 0; i < room.getCloseRoomsize() && !closeToManager; i++)
 		{
 			temp = room.getClose(i);
-			if (!temp.isShared())
+			if (!temp.isShared() && !temp.isEmpty())
 			{
 				if (temp.getOccupant(0).getIsManager()) closeToManager = true;
 			}
@@ -633,7 +634,7 @@ public int utility (Person person, Room room)
 		for (int i = 0; i < room.getCloseRoomsize() && !closeToHead; i++)
 		{
 			temp = room.getClose(i);
-			if (!temp.isShared())
+			if (!temp.isShared() && !temp.isEmpty())
 			{
 				if (temp.getOccupant(0).getIsGroupHead()) closeToHead = true;
 			}
@@ -649,7 +650,7 @@ public int utility (Person person, Room room)
 		for (int i = 0; i < room.getCloseRoomsize() && !closeToHead; i++)
 		{
 			temp = room.getClose(i);
-			if (!temp.isShared())
+			if (!temp.isShared() && !temp.isEmpty())
 			{
 				if (temp.getOccupant(0).getIsProjectHead()) closeToHead = true;
 			}
@@ -664,7 +665,7 @@ public int utility (Person person, Room room)
 		for (int i = 0; i < room.getCloseRoomsize() && !closeToSecretary; i++)
 		{
 			temp = room.getClose(i);
-			if (!temp.isShared()) {
+			if (!temp.isShared() && !temp.isEmpty()) {
 				if (temp.getOccupant(0).getIsSecretary()) closeToSecretary = true;
 			}
 			else if (temp.isShared()) {
@@ -714,8 +715,102 @@ public int utility (Person person, Room room)
 			
 			if( currentPerson.getIsManager() || arrRooms.get(index).isShared() )
 				arrRooms.remove(index);
-
+			
 		}
+	}
+	
+	public int calcTotalUtility()
+	{
+		int totalUtil = 0;
+		Iterator it = assignmentMap2.entrySet().iterator();
+		while (it.hasNext()) 
+		{
+			Map.Entry pairs = (Map.Entry)it.next();
+			Person person = (Person)pairs.getKey();
+			Room room = (Room)pairs.getValue();
+			System.out.println(person.getName());
+			System.out.println(room.getName());
+			int util = utility( person, room );
+			totalUtil += util;
+		}
+		return totalUtil;
+	}
+	
+	public void makeSolution()
+	{
+		int i = findPersonIndex( "Andy" );
+		int j = findRoomIndex( "C5113" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Angi" );
+		j = findRoomIndex( "C5113" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Eva" );
+		j = findRoomIndex( "C5114" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Hans" );
+		j = findRoomIndex( "C5115" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Harry" );
+		j = findRoomIndex( "C5116" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Joachim" );
+		j = findRoomIndex( "C5117" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Jurgen" );
+		j = findRoomIndex( "C5116" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Katharina" );
+		j = findRoomIndex( "C5119" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Marc" );
+		j = findRoomIndex( "C5120" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Michael" );
+		j = findRoomIndex( "C5123" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		i = findPersonIndex( "Monika" );
+		j = findRoomIndex( "C5121" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Thomas" );
+		j = findRoomIndex( "C5122" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Ulrike" );
+		j = findRoomIndex( "C5121" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Uwe" );
+		j = findRoomIndex( "C5123" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
+		
+		i = findPersonIndex( "Werner" );
+		j = findRoomIndex( "C5120" );
+		
+		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
 	}
 	
 }
