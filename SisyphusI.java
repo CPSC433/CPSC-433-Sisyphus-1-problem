@@ -94,6 +94,7 @@ public class SisyphusI {
 			env.makeSolution();
 			int totalUtil = env.calcTotalUtility();
 			System.out.println( totalUtil );
+			env.printConstriants();
 			outFile.close();
 		} catch (Exception ex) {}
 		
