@@ -669,7 +669,7 @@ public int utility (Person person, Room room)
 		for (int i = 0; i < room.getCloseRoomsize() && !closeToHead; i++)
 		{
 			temp = room.getClose(i);
-			if (temp.getOccupant(0).getIsProjectHead() && person.getProject().equals(temp.getOccupant(0).getProject())) closeToHead = true;
+			if (!temp.isEmpty() && temp.getOccupant(0).getIsProjectHead() && person.getProject().equals(temp.getOccupant(0).getProject())) closeToHead = true;
 		}
 		if (!closeToHead && isProjectHead) {util -= 5; con[7]++;}
 	}	
@@ -702,7 +702,6 @@ public int utility (Person person, Room room)
 		{
 			Person currentPerson = arrPeople.get(i);
 			ArrayList<Integer> arrUtil = new ArrayList<Integer>();
-			
 			for( int j = 0; j < arrRooms.size(); j++ )
 			{
 				if( currentPerson.getIsManager() && !arrRooms.get(j).isEmpty() )
@@ -711,7 +710,6 @@ public int utility (Person person, Room room)
 				else
 					arrUtil.add(utility( currentPerson, arrRooms.get(j) ));
 			}
-			
 			int highestUtil = -1000;
 			int index = 0;
 			for( int j = 0; j < arrUtil.size(); j++ )
@@ -738,7 +736,7 @@ public int utility (Person person, Room room)
 	public int calcTotalUtility()
 	{
 		int totalUtil = 0;
-		Iterator it = assignmentMap2.entrySet().iterator();
+		Iterator it = assignmentMap.entrySet().iterator();
 		while (it.hasNext()) 
 		{
 			Map.Entry pairs = (Map.Entry)it.next();
