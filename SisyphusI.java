@@ -90,8 +90,8 @@ public class SisyphusI {
 			{
 				outFile.println(env.arrPredicates.get(i).toString());
 			}
-			//env.findSolution();
-			env.makeSolution();
+			env.findSolution();
+			//env.makeSolution();
 			int totalUtil = env.calcTotalUtility();
 			System.out.println( totalUtil );
 			env.printConstriants();
