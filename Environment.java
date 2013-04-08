@@ -608,24 +608,24 @@ implements SisyphusPredicates
 */
 
 
-public int utility (Person person, Room room)
+public int utility (Person person, Room room, boolean end_util)
 {
 	int util = 0;
 	if (room.isShared())
 	{
 		util -= 4;
 		con[13]++;
-		if (person.getIsSmoker() && !(room.getOther(person).getIsSmoker())) {util -= 50; con[10]++;}
-		if (room.getIsSmall()) {util -= 25; con[15]++;}
-		if (!person.getProject().equals("") && person.getProject().equals(room.getOther(person).getProject())) {util -= 7; con[11]++;}  
-		if (!person.worksWith(room.getOther(person))) {util -= 3; con[14]++;}
+		if (person.getIsSmoker() && !(room.getOther(person).getIsSmoker())) {util -= 50; if (end_util) con[10]++;}
+		if (room.getIsSmall()) {util -= 25; if (end_util) con[15]++;}
+		if (!person.getProject().equals("") && person.getProject().equals(room.getOther(person).getProject())) {util -= 7; if (end_util) con[11]++;}  
+		if (!person.worksWith(room.getOther(person))) {util -= 3; if (end_util) con[14]++;}
 		if (!person.getIsSecretary())
 		{
-			if (person.getIsHacker() && !room.getOther(person).getIsHacker()) {util -= 2; con[12]++;}
-			if (!person.getIsHacker() && room.getOther(person).getIsHacker()) {util -= 2; con[12]++;}
+			if (person.getIsHacker() && !room.getOther(person).getIsHacker()) {util -= 2; if (end_util) con[12]++;}
+			if (!person.getIsHacker() && room.getOther(person).getIsHacker()) {util -= 2; if (end_util) con[12]++;}
 		}
 	}
-	if (person.getIsSecretary() && room.isShared() && !room.getOther(person).getIsSecretary()) {util -= 5; con[3]++;}
+	if (person.getIsSecretary() && room.isShared() && !room.getOther(person).getIsSecretary()) {util -= 5; if (end_util) con[3]++;}
 	if (!person.getIsManager())
 	{
 		boolean closeToManager = false;
@@ -638,7 +638,7 @@ public int utility (Person person, Room room)
 				if (temp.getOccupant(0).getIsManager()) closeToManager = true;
 			}
 		}
-		if (!closeToManager) {util -= 2; con[1]++;}
+		if (!closeToManager) {util -= 2; if (end_util) con[1]++;}
 	}
 	if (!person.getIsGroupHead())
 	{
@@ -652,9 +652,9 @@ public int utility (Person person, Room room)
 				if (temp.getOccupant(0).getIsGroupHead() && person.getGroup().equals(temp.getOccupant(0).getGroup())) closeToHead = true;
 			}
 		}
-		if (!closeToHead) {util -= 2; con[6]++;}
-		if (!closeToHead && person.getIsManager()) {util -= 20; con[5]++;}
-		if (!closeToHead && person.getIsProjectHead() && person.getIsProjectLarge() ) {util -= 10; con[9]++;}
+		if (!closeToHead) {util -= 2; if (end_util) con[6]++;}
+		if (!closeToHead && person.getIsManager()) {util -= 20; if (end_util) con[5]++;}
+		if (!closeToHead && person.getIsProjectHead() && person.getIsProjectLarge() ) {util -= 10; if (end_util) con[9]++;}
 	}
 	if (!person.getIsProjectHead())
 	{
@@ -671,9 +671,9 @@ public int utility (Person person, Room room)
 			temp = room.getClose(i);
 			if (!temp.isEmpty() && temp.getOccupant(0).getIsProjectHead() && person.getProject().equals(temp.getOccupant(0).getProject())) closeToHead = true;
 		}
-		if (!closeToHead && isProjectHead) {util -= 5; con[7]++;}
+		if (!closeToHead && isProjectHead) {util -= 5; if (end_util) con[7]++;}
 	}	
-	if (person.getIsGroupHead() && !room.getIsLarge()) {util -= 40; con[0]++;}
+	if (person.getIsGroupHead() && !room.getIsLarge()) {util -= 40; if (end_util) con[0]++;}
 	if (person.getIsGroupHead() || person.getIsProjectHead() || person.getIsManager())
 	{
 		boolean closeToSecretary = false;
@@ -689,9 +689,9 @@ public int utility (Person person, Room room)
 				if (temp.getOccupant(1).getIsSecretary() && person.getGroup().equals(temp.getOccupant(0).getGroup())) closeToSecretary = true;
 			}
 		}
-		if (!closeToSecretary && person.getIsGroupHead()) {util -= 30; con[2]++;}
-		if (!closeToSecretary && person.getIsManager()) {util -= 20; con[4]++;}
-		if (!closeToSecretary && person.getIsProjectHead() && person.getIsProjectLarge()) {util -=10; con[8]++;}
+		if (!closeToSecretary && person.getIsGroupHead()) {util -= 30; if (end_util) con[2]++;}
+		if (!closeToSecretary && person.getIsManager()) {util -= 20; if (end_util) con[4]++;}
+		if (!closeToSecretary && person.getIsProjectHead() && person.getIsProjectLarge()) {util -=10; if (end_util) con[8]++;}
 	}
 	return util;
 }
