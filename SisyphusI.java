@@ -27,6 +27,12 @@ public class SisyphusI {
 		long startTime = System.currentTimeMillis();
 		
 		Environment env = new Environment("PredicateReader");
+		
+		if( !env.IsSolution() ) {
+			System.out.println("There is not a valid solution for this input");
+			System.exit(0);
+		}
+		
 		String fromFile = null;
 		
 		if (args.length>0) {
@@ -97,12 +103,12 @@ public class SisyphusI {
 			env.printConstriants();
 			outFile.close();
 		} catch (Exception ex) {}
-		
+		/*
 		if( env.IsSolution() )
 			System.out.println("There is a valid solution for this input");
 		else
 			System.out.println("There is not a valid solution for this input");
-		
+		*/
 		System.out.println("Total time: " + (System.currentTimeMillis() - startTime) + "ms");
 		/*
 
