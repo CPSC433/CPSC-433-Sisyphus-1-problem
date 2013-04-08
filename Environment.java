@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Random;
 
 import cpsc433.Predicate.ParamType;
 
@@ -695,9 +696,17 @@ public int utility (Person person, Room room, boolean end_util)
 	}
 	return util;
 }
-	
+
+	public int usedRooms() {
+		
+		return 0;
+	}
+		
 	public void findSolution()
 	{
+		// create array to hold indices of rooms with the same highest util value, to randomly choose from at the end
+		ArrayList<Integer> rooms_w_same_util = new ArrayList<Integer>();
+		
 		for( int i = 0; i < arrPeople.size(); i++ )
 		{
 			Person currentPerson = arrPeople.get(i);
@@ -708,7 +717,7 @@ public int utility (Person person, Room room, boolean end_util)
 					arrUtil.add(-1000);
 				
 				else
-					arrUtil.add(utility( currentPerson, arrRooms.get(j) ));
+					arrUtil.add(utility( currentPerson, arrRooms.get(j), false ));
 			}
 			int highestUtil = -1000;
 			int index = 0;
@@ -719,9 +728,23 @@ public int utility (Person person, Room room, boolean end_util)
 				{
 					highestUtil = util;
 					index = j;
+					// clear array because new highest util has been found
+					rooms_w_same_util.clear();
+					// set first element in array to be index of room
+					rooms_w_same_util.set(0, j);
+				}
+				// if utility of room is the same as highest utility, we will randomly choose one at the end
+				else if (util == highestUtil){
+					rooms_w_same_util.add(j); // add room to array
 				}
 			}
-
+			
+			// If there is more than one room with the same utility to choose from, choose randomly 
+			if (rooms_w_same_util.size() > 1) {
+				Random gen = new Random(1001);	// seeded for testing -- REMOVE SEED BEFORE FULL IMPLEMENTATION
+				index = gen.nextInt(rooms_w_same_util.size());
+			}
+	
 			assignmentMap.put(currentPerson, arrRooms.get(index));
 			arrRooms.get(index).setOccupant( currentPerson );
 			
@@ -732,7 +755,7 @@ public int utility (Person person, Room room, boolean end_util)
 			
 		}
 	}
-	
+		
 	public int calcTotalUtility()
 	{
 		int totalUtil = 0;
@@ -742,12 +765,12 @@ public int utility (Person person, Room room, boolean end_util)
 			Map.Entry pairs = (Map.Entry)it.next();
 			Person person = (Person)pairs.getKey();
 			Room room = (Room)pairs.getValue();
-			int util = utility( person, room );
+			int util = utility( person, room, true );
 			totalUtil += util;
 		}
 		return totalUtil;
 	}
-	
+		
 	public void makeSolution()
 	{
 		int i = findPersonIndex( "Andy" );
