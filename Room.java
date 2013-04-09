@@ -10,7 +10,6 @@ public class Room
 	private boolean isSmall;
 	private boolean isMedium;
 	private boolean isLarge;
-	private int num_occupants;
 	
 	
 	public Room(String roomName) 
@@ -20,7 +19,6 @@ public class Room
 		close_to = new ArrayList<Room>();
 		occupants.add(null);
 		occupants.add(null);
-		num_occupants = 0;
 		isSmall = false;
 		isMedium = false;
 		isLarge = false;
