@@ -697,11 +697,6 @@ implements SisyphusPredicates
 		return util;
 	}
 	
-	public int usedRooms() {
-		
-		return 0;
-	}
-	
 	public void findSolution()
 	{
 		for( int i = 0; i < arrPeople.size(); i++ )
