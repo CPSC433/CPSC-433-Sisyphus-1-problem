@@ -703,22 +703,33 @@ implements SisyphusPredicates
 		{
 			// create array to hold indices of rooms with the same highest util value, to randomly choose from at the end
 			ArrayList<Integer> rooms_w_same_util = new ArrayList<Integer>();
+			ArrayList<Boolean> new_room_filled = new ArrayList<Boolean>();
 			
 			Person currentPerson = arrPeople.get(i);
 			ArrayList<Integer> arrUtil = new ArrayList<Integer>();
 			for( int j = 0; j < arrRooms.size(); j++ )
 			{
-				if( currentPerson.getIsManager() && !arrRooms.get(j).isEmpty() )
+				if( currentPerson.getIsManager() && !arrRooms.get(j).isEmpty() ){
 					arrUtil.add(-1000);
-				
-				else
+				}
+				else{
 					arrUtil.add(utility( currentPerson, arrRooms.get(j), false ));
+					if (arrRooms.get(j).isEmpty()){
+						new_room_filled.add(true);
+					}
+					else {
+						new_room_filled.add(false);
+					}
+				}
+					
 			}
 			int highestUtil = -1000;
 			int index = 0;
+			boolean newRoomFlag = false 
 			for( int j = 0; j < arrUtil.size(); j++ )
 			{
 				int util = arrUtil.get(j);
+				boolean newRoom = new_room_added.get(j);
 				if( util > highestUtil )
 				{
 					highestUtil = util;
@@ -727,10 +738,20 @@ implements SisyphusPredicates
 					rooms_w_same_util.clear();
 					// set first element in array to be index of room
 					rooms_w_same_util.add(j);
+					newRoomFlag = newRoom;
 				}
 				// if utility of room is the same as highest utility, we will randomly choose one at the end
-				else if (util == highestUtil){
-					rooms_w_same_util.add(j); // add room to array
+				else if (util == highestUtil && newRoom && !newRoomFlag){
+					highestUtil = util;
+					index = j;
+					// clear array because new highest util has been found
+					rooms_w_same_util.clear();
+					// set first element in array to be index of room
+					rooms_w_same_util.add(j);
+					newRoomFlag = newRoom;
+				}
+				else if (util == highestUtil && newRoom == newRoomFlag){
+					rooms_w_same_util.add(j);					
 				}
 			}
 			
