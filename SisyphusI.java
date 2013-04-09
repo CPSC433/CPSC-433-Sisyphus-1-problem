@@ -44,6 +44,7 @@ public class SisyphusI {
 		}
 		
 		final String out = fromFile+".out";
+		long startWritingTime = System.currentTimeMillis();
 		try {
 			PrintStream outFile = new PrintStream(new FileOutputStream(out));
 			outFile.println( "***Employees***" );
@@ -103,6 +104,7 @@ public class SisyphusI {
 			env.printConstriants();
 			outFile.close();
 		} catch (Exception ex) {}
+		System.out.println("Time to read to file: " + (System.currentTimeMillis() - startWritingTime));
 		/*
 		 if( env.IsSolution() )
 		 System.out.println("There is a valid solution for this input");
