@@ -62,6 +62,9 @@ implements SisyphusPredicates
 	
 	// Stores all people in our problem
 	public ArrayList<Person> arrPeople = new ArrayList<Person>();
+	public ArrayList<Person> arrResearchers = new ArrayList<Person>();
+	public ArrayList<Person> arrSmokers = new ArrayList<Person>();
+	public ArrayList<Person> arrManagers = new ArrayList<Person>();
 	
 	public ArrayList<Room> arrRooms = new ArrayList<Room>();
 	
@@ -202,11 +205,15 @@ implements SisyphusPredicates
 	
 	public void a_heads_group(String p, String grp)
 	{
+		int personIndex = findPersonIndex( p );
+		if( personIndex == -1 )
+			numManagers++;
+		
 		a_person(p);
 		
 		a_group(p, grp);
 		
-		int personIndex = findPersonIndex( p );
+		personIndex = findPersonIndex( p );
 		arrPeople.get(personIndex).setIsGroupHead(true);
 		
 		String newPredicate = "heads-group("+p+", "+grp+")";
@@ -216,11 +223,15 @@ implements SisyphusPredicates
 	
 	public void a_heads_project(String p, String prj)
 	{
+		int personIndex = findPersonIndex( p );
+		if( personIndex == -1 )
+			numManagers++;
+		
 		a_person(p);
 		
 		a_project(p, prj);
 		
-		int personIndex = findPersonIndex( p );
+		personIndex = findPersonIndex( p );
 		arrPeople.get(personIndex).setIsProjectHead(true);
 		
 		String newPredicate = "heads-project("+p+", "+prj+")";
@@ -711,6 +722,7 @@ implements SisyphusPredicates
 			{
 				if( currentPerson.getIsManager() && !arrRooms.get(j).isEmpty() ){
 					arrUtil.add(-1000);
+					new_room_filled.add(false);
 				}
 				else{
 					arrUtil.add(utility( currentPerson, arrRooms.get(j), false ));
@@ -721,7 +733,7 @@ implements SisyphusPredicates
 						new_room_filled.add(false);
 					}
 				}
-					
+				
 			}
 			//this is the control for the path we wish to take
 			int highestUtil = -1000;
@@ -730,7 +742,7 @@ implements SisyphusPredicates
 			for( int j = 0; j < arrUtil.size(); j++ )
 			{
 				int util = arrUtil.get(j);
-				boolean newRoom = new_room_added.get(j);
+				boolean newRoom = new_room_filled.get(j);
 				if( util > highestUtil )  //our first control is to take the room configuration with the highest utility
 				{
 					highestUtil = util;
@@ -758,7 +770,7 @@ implements SisyphusPredicates
 			
 			// If there is more than one room with the same utility and amount of rooms used (preference for more rooms used) to choose from, choose randomly 
 			if (rooms_w_same_util.size() > 1) {
-				Random gen = new Random(1001);	// seeded for testing -- REMOVE SEED BEFORE FULL IMPLEMENTATION
+				Random gen = new Random();	// seeded for testing -- REMOVE SEED BEFORE FULL IMPLEMENTATION
 				index = gen.nextInt(rooms_w_same_util.size());
 			}
 			
@@ -885,6 +897,33 @@ implements SisyphusPredicates
 		for (int i = 0; i < 16; i++)
 		{
 			System.out.println(i + 1 + ":  " + con[i]);
+		}
+	}
+	
+	private void orderEmployees()
+	{
+		for( int i = 0; i < arrPeople.size(); i++ )
+		{
+			Person currentPerson = arrPeople.get(i);
+			if( currentPerson.getIsManager() ||  currentPerson.getIsManager() ||  currentPerson.getIsManager() )
+				arrManagers.add( currentPerson );
+			else if( currentPerson.getIsSmoker() )
+				arrSmokers.add( currentPerson );
+			else
+				arrResearchers.add( currentPerson );
+		}
+		arrPeople.clear();
+		for( int i = 0; i < arrManagers.size(); i++ )
+		{
+			arrPeople.add(arrManagers.get(i));
+		}
+		for( int i = 0; i < arrSmokers.size(); i++ )
+		{
+			arrPeople.add(arrSmokers.get(i));
+		}
+		for( int i = 0; i < arrResearchers.size(); i++ )
+		{
+			arrPeople.add(arrResearchers.get(i));
 		}
 	}
 	
