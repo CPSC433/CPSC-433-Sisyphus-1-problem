@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Person 
 {	
-	private int personUtil;
+	//private int personUtil;
 	private String name;
 	private String group;
 	private String project;
@@ -33,7 +33,7 @@ public class Person
 		isResearcher = false;
 		isSecretary = false;
 		isProjectLarge = false;
-		personUtil = -1000;
+		//personUtil = -1000;
 	}
 	
 	// Getters
