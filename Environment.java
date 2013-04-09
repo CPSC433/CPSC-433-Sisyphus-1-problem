@@ -626,7 +626,7 @@ implements SisyphusPredicates
 		if (room.isShared())
 		{
 			util -= 4;
-			con[13]++;
+			if (end_util) con[13]++;
 			if (person.getIsSmoker() && !(room.getOther(person).getIsSmoker())) {util -= 50; if (end_util) con[10]++;}
 			if (room.getIsSmall()) {util -= 25; if (end_util) con[15]++;}
 			if (!person.getProject().equals("") && person.getProject().equals(room.getOther(person).getProject())) {util -= 7; if (end_util) con[11]++;}  
@@ -720,23 +720,25 @@ implements SisyphusPredicates
 			ArrayList<Integer> arrUtil = new ArrayList<Integer>();
 			for( int j = 0; j < arrRooms.size(); j++ )
 			{
+				assignmentMap.put(currentPerson, arrRooms.get(j));
 				if( currentPerson.getIsManager() && !arrRooms.get(j).isEmpty() ){
-					arrUtil.add(-1000);
+					arrUtil.add(-10000);
 					new_room_filled.add(false);
 				}
 				else{
-					arrUtil.add(utility( currentPerson, arrRooms.get(j), false ));
+					arrUtil.add(calcTotalUtility(false));
 					if (arrRooms.get(j).isEmpty()){
 						new_room_filled.add(true);
 					}
 					else {
 						new_room_filled.add(false);
 					}
+					assignmentMap.remove(currentPerson);
 				}
 				
 			}
 			//this is the control for the path we wish to take
-			int highestUtil = -1000;
+			int highestUtil = -10000;
 			int index = 0;
 			boolean newRoomFlag = false; 
 			for( int j = 0; j < arrUtil.size(); j++ )
@@ -754,7 +756,7 @@ implements SisyphusPredicates
 					newRoomFlag = newRoom;
 				}
 				// if utility of room is the same as highest utility, we will randomly choose one at the end
-				else if (util == highestUtil && newRoom && !newRoomFlag){ //if multiple rooms have the same highest utility we check to see if a new room is being used
+				/*else if (util == highestUtil && newRoom && !newRoomFlag){ //if multiple rooms have the same highest utility we check to see if a new room is being used
 					highestUtil = util;                               //if so we choose those configurations which have the highest utility and more rooms used
 					index = j;
 					// clear array because new highest util has been found
@@ -762,8 +764,8 @@ implements SisyphusPredicates
 					// set first element in array to be index of room
 					rooms_w_same_util.add(j);
 					newRoomFlag = newRoom;
-				}
-				else if (util == highestUtil && newRoom == newRoomFlag){ //if the Utility is the same and the amount of rooms used is the same then add the
+				}*/
+				else if (util == highestUtil /*&& newRoom == newRoomFlag*/){ //if the Utility is the same and the amount of rooms used is the same then add the
 					rooms_w_same_util.add(j);			//index to the array of possible paths
 				}
 			}
@@ -785,7 +787,7 @@ implements SisyphusPredicates
 		}
 	}
 	
-	public int calcTotalUtility()
+	public int calcTotalUtility(boolean bCountConstraints)
 	{
 		int totalUtil = 0;
 		Iterator it = assignmentMap.entrySet().iterator();
@@ -794,7 +796,7 @@ implements SisyphusPredicates
 			Map.Entry pairs = (Map.Entry)it.next();
 			Person person = (Person)pairs.getKey();
 			Room room = (Room)pairs.getValue();
-			int util = utility( person, room, true );
+			int util = utility( person, room, bCountConstraints );
 			totalUtil += util;
 		}
 		return totalUtil;
