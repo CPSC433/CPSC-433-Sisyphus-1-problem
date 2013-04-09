@@ -29,13 +29,21 @@ public class SisyphusI {
 		Environment env = new Environment("PredicateReader");
 		
 		String fromFile = null;
+		long maxtime = 0;
 		
-		if (args.length>0) {
+		if (args.length == 2) {
 			fromFile = args[0];
 			env.fromFile(fromFile);
+			try {
+				maxtime = Long.valueOf(args[1]);
+			} catch (Exception ex) {
+				System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
+				System.exit(0);
+			}
 		}
 		else {
 			System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
+			System.exit(0);
 		}
 		
 		if( !env.IsSolution() ) {
@@ -111,7 +119,9 @@ public class SisyphusI {
 		 else
 		 System.out.println("There is not a valid solution for this input");
 		 */
-		System.out.println("Total time: " + (System.currentTimeMillis() - startTime) + "ms");
+		long endtime = System.currentTimeMillis() - startTime;
+		System.out.println("Total time: " + endtime + "ms");
+		System.out.println("Under time constraint? " + (endtime < maxtime));
 		/*
 		 
 		 Thread shutdownHookThread = new Thread("SisyphusIShutdownHook")
