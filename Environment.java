@@ -726,7 +726,7 @@ implements SisyphusPredicates
 			//this is the control for the path we wish to take
 			int highestUtil = -1000;
 			int index = 0;
-			boolean newRoomFlag = false 
+			boolean newRoomFlag = false; 
 			for( int j = 0; j < arrUtil.size(); j++ )
 			{
 				int util = arrUtil.get(j);
