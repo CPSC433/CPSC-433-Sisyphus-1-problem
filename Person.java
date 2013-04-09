@@ -3,7 +3,8 @@ package cpsc433;
 import java.util.ArrayList;
 
 public class Person 
-{
+{	
+	private String personUtil:
 	private String name;
 	private String group;
 	private String project;
@@ -16,6 +17,8 @@ public class Person
 	private boolean isSecretary;
 	private boolean isProjectLarge;
 	private ArrayList<String> arrWorksWith = new ArrayList<String>();
+	
+
 	
 	public Person(String personName) 
 	{
@@ -30,6 +33,7 @@ public class Person
 		isResearcher = false;
 		isSecretary = false;
 		isProjectLarge = false;
+		personUtil = -1000;
 	}
 	
 	// Getters
@@ -88,6 +92,11 @@ public class Person
 		return isHacker;
 	}
 	
+	public int getPersonUtil()
+	{
+		return personUtil;
+	}
+	
 	public boolean getIsSmoker()
 	{
 		return isSmoker;
@@ -99,6 +108,10 @@ public class Person
 	}
 	
 	// Setters
+	
+	public setPersonUtil( int util){
+		personUtil = util;
+	}
 	
 	public void setGroup( String name )
 	{
