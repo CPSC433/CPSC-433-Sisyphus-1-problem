@@ -723,6 +723,7 @@ implements SisyphusPredicates
 				}
 					
 			}
+			//this is the control for the path we wish to take
 			int highestUtil = -1000;
 			int index = 0;
 			boolean newRoomFlag = false 
@@ -730,7 +731,7 @@ implements SisyphusPredicates
 			{
 				int util = arrUtil.get(j);
 				boolean newRoom = new_room_added.get(j);
-				if( util > highestUtil )
+				if( util > highestUtil )  //our first control is to take the room configuration with the highest utility
 				{
 					highestUtil = util;
 					index = j;
@@ -741,8 +742,8 @@ implements SisyphusPredicates
 					newRoomFlag = newRoom;
 				}
 				// if utility of room is the same as highest utility, we will randomly choose one at the end
-				else if (util == highestUtil && newRoom && !newRoomFlag){
-					highestUtil = util;
+				else if (util == highestUtil && newRoom && !newRoomFlag){ //if multiple rooms have the same highest utility we check to see if a new room is being used
+					highestUtil = util;                               //if so we choose those configurations which have the highest utility and more rooms used
 					index = j;
 					// clear array because new highest util has been found
 					rooms_w_same_util.clear();
@@ -750,12 +751,12 @@ implements SisyphusPredicates
 					rooms_w_same_util.add(j);
 					newRoomFlag = newRoom;
 				}
-				else if (util == highestUtil && newRoom == newRoomFlag){
-					rooms_w_same_util.add(j);					
+				else if (util == highestUtil && newRoom == newRoomFlag){ //if the Utility is the same and the amount of rooms used is the same then add the
+					rooms_w_same_util.add(j);			//index to the array of possible paths
 				}
 			}
 			
-			// If there is more than one room with the same utility to choose from, choose randomly 
+			// If there is more than one room with the same utility and amount of rooms used (preference for more rooms used) to choose from, choose randomly 
 			if (rooms_w_same_util.size() > 1) {
 				Random gen = new Random(1001);	// seeded for testing -- REMOVE SEED BEFORE FULL IMPLEMENTATION
 				index = gen.nextInt(rooms_w_same_util.size());
