@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Person 
 {	
-	private String personUtil:
+//	private String personUtil:
 	private String name;
 	private String group;
 	private String project;
@@ -92,10 +92,10 @@ public class Person
 		return isHacker;
 	}
 	
-	public int getPersonUtil()
+/*	public int getPersonUtil()
 	{
 		return personUtil;
-	}
+	}*/
 	
 	public boolean getIsSmoker()
 	{
@@ -109,9 +109,9 @@ public class Person
 	
 	// Setters
 	
-	public setPersonUtil( int util){
+/*	public setPersonUtil( int util){
 		personUtil = util;
-	}
+	}*/
 	
 	public void setGroup( String name )
 	{
