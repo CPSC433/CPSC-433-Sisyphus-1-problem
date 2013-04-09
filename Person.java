@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Person 
 {	
-//	private String personUtil:
+	private int personUtil:
 	private String name;
 	private String group;
 	private String project;
