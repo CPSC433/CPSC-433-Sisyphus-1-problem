@@ -18,7 +18,7 @@ import java.io.PrintStream;
  *
  */
 public class SisyphusI {
-
+	
 	/**
 	 * @param args
 	 */
@@ -28,11 +28,6 @@ public class SisyphusI {
 		
 		Environment env = new Environment("PredicateReader");
 		
-		if( !env.IsSolution() ) {
-			System.out.println("There is not a valid solution for this input");
-			System.exit(0);
-		}
-		
 		String fromFile = null;
 		
 		if (args.length>0) {
@@ -41,6 +36,11 @@ public class SisyphusI {
 		}
 		else {
 			System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
+		}
+		
+		if( !env.IsSolution() ) {
+			System.out.println("There is not a valid solution for this input");
+			System.exit(0);
 		}
 		
 		final String out = fromFile+".out";
@@ -104,74 +104,74 @@ public class SisyphusI {
 			outFile.close();
 		} catch (Exception ex) {}
 		/*
-		if( env.IsSolution() )
-			System.out.println("There is a valid solution for this input");
-		else
-			System.out.println("There is not a valid solution for this input");
-		*/
+		 if( env.IsSolution() )
+		 System.out.println("There is a valid solution for this input");
+		 else
+		 System.out.println("There is not a valid solution for this input");
+		 */
 		System.out.println("Total time: " + (System.currentTimeMillis() - startTime) + "ms");
 		/*
-
-		Thread shutdownHookThread = new Thread("SisyphusIShutdownHook")
-		{@Override public void run() {
-			System.err.println("***Shutdown hook activated***");
-			
-			System.err.println(env.currentSolution==null
-					?"no current solution"
-							:env.currentSolution.toString());
-			System.err.println("***Shutdown hook termniated***");
-		}};
-		Runtime.getRuntime().addShutdownHook(shutdownHookThread);
-
-		if (args.length>1) {
-			try {
-				long timeLimit = new Long(args[1]).longValue();
-				//timeLimit -= (System.currentTimeMillis()-startTime);
-				System.out.println("Performing search for "+timeLimit+"ms");
-				env.a_search("DepthFirstTreeSearch", "SmartControl", timeLimit);
-			}
-			catch (NumberFormatException ex) {
-				env.currentSolution = new Solution(args[1]);
-			}
-		}
-
-		if (env.currentSolution!=null) {
-			//System.out.println(currentSolution.toString());
-			System.out.println(env.currentSolution.getName()+": isSolved()    -> "+env.currentSolution.isSolved());
-			System.out.println(env.currentSolution.getName()+": getGoodness() -> "+env.currentSolution.getGoodness());
-		}
-
-		if (args.length>1) {
-			System.exit(1);
-		}
-
-		final int maxBuf = 200;
-		byte[] buf = new byte[maxBuf];
-		int length;
-		try {
-			System.out.print("\nSisyphus I: query using predicates, assert using \"!\" prefixing predicates;\n !exit() to quit; !help() for help.\n\n> ");
-			while ((length=System.in.read(buf))!=-1) {
-				String s = new String(buf,0,length);
-				s = s.trim();
-				if (s.equals("exit")) break;
-				if (s.equals("?")||s.equals("help")) {
-					s = "!help()";
-					System.out.println("> !help()");
-				}
-				if (s.length()>0) {
-					if (s.charAt(0)=='!') 
-						env.assert_(s.substring(1));
-					else 
-						System.out.print(" --> "+env.eval(s));
-				}
-				System.out.print("\n> ");
-			}
-		} catch (Exception e) {
-			System.err.println("exiting: "+e.toString());
-		}
-		try {
-			Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
-		} catch (IllegalStateException e) {}; */
+		 
+		 Thread shutdownHookThread = new Thread("SisyphusIShutdownHook")
+		 {@Override public void run() {
+		 System.err.println("***Shutdown hook activated***");
+		 
+		 System.err.println(env.currentSolution==null
+		 ?"no current solution"
+		 :env.currentSolution.toString());
+		 System.err.println("***Shutdown hook termniated***");
+		 }};
+		 Runtime.getRuntime().addShutdownHook(shutdownHookThread);
+		 
+		 if (args.length>1) {
+		 try {
+		 long timeLimit = new Long(args[1]).longValue();
+		 //timeLimit -= (System.currentTimeMillis()-startTime);
+		 System.out.println("Performing search for "+timeLimit+"ms");
+		 env.a_search("DepthFirstTreeSearch", "SmartControl", timeLimit);
+		 }
+		 catch (NumberFormatException ex) {
+		 env.currentSolution = new Solution(args[1]);
+		 }
+		 }
+		 
+		 if (env.currentSolution!=null) {
+		 //System.out.println(currentSolution.toString());
+		 System.out.println(env.currentSolution.getName()+": isSolved()    -> "+env.currentSolution.isSolved());
+		 System.out.println(env.currentSolution.getName()+": getGoodness() -> "+env.currentSolution.getGoodness());
+		 }
+		 
+		 if (args.length>1) {
+		 System.exit(1);
+		 }
+		 
+		 final int maxBuf = 200;
+		 byte[] buf = new byte[maxBuf];
+		 int length;
+		 try {
+		 System.out.print("\nSisyphus I: query using predicates, assert using \"!\" prefixing predicates;\n !exit() to quit; !help() for help.\n\n> ");
+		 while ((length=System.in.read(buf))!=-1) {
+		 String s = new String(buf,0,length);
+		 s = s.trim();
+		 if (s.equals("exit")) break;
+		 if (s.equals("?")||s.equals("help")) {
+		 s = "!help()";
+		 System.out.println("> !help()");
+		 }
+		 if (s.length()>0) {
+		 if (s.charAt(0)=='!') 
+		 env.assert_(s.substring(1));
+		 else 
+		 System.out.print(" --> "+env.eval(s));
+		 }
+		 System.out.print("\n> ");
+		 }
+		 } catch (Exception e) {
+		 System.err.println("exiting: "+e.toString());
+		 }
+		 try {
+		 Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
+		 } catch (IllegalStateException e) {}; */
 	}
-
+	
 }
