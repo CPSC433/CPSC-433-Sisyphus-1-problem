@@ -112,7 +112,7 @@ public class SisyphusI {
 			env.printConstriants();
 			outFile.close();
 		} catch (Exception ex) {}
-		System.out.println("Time to read to file: " + (System.currentTimeMillis() - startWritingTime));
+		System.out.println("Time to read to file: " + (System.currentTimeMillis() - startWritingTime) + "ms");
 		/*
 		 if( env.IsSolution() )
 		 System.out.println("There is a valid solution for this input");
