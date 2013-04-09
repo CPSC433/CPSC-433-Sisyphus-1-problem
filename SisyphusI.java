@@ -53,8 +53,17 @@ public class SisyphusI {
 		
 		final String out = fromFile+".out";
 		long startWritingTime = System.currentTimeMillis();
+		env.findSolution();
+		//env.makeSolution();
 		try {
 			PrintStream outFile = new PrintStream(new FileOutputStream(out));
+			// Form: assigned-to(name,room-name)
+			for (int i = 0; i < env.arrPeople.size(); i++) {
+				Person currentPerson = env.arrPeople.get(i);
+				Room room = env.assignmentMap.get(currentPerson);
+				outFile.println("assigned-to(" + currentPerson.getName() + "," + room.getName() + ")");
+			}
+			/*
 			outFile.println( "***Employees***" );
 			for( int i = 0; i < env.arrEmployees.size(); i++ )
 			{
@@ -105,8 +114,7 @@ public class SisyphusI {
 			{
 				outFile.println(env.arrPredicates.get(i).toString());
 			}
-			env.findSolution();
-			//env.makeSolution();
+			*/
 			int totalUtil = env.calcTotalUtility();
 			System.out.println( totalUtil );
 			env.printConstriants();
