@@ -29,21 +29,13 @@ public class SisyphusI {
 		Environment env = new Environment("PredicateReader");
 		
 		String fromFile = null;
-		long maxtime = 0;
 		
-		if (args.length == 2) {
+		if (args.length>0) {
 			fromFile = args[0];
 			env.fromFile(fromFile);
-			try {
-				maxtime = Long.valueOf(args[1]);
-			} catch (Exception ex) {
-				System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
-				System.exit(0);
-			}
 		}
 		else {
 			System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
-			System.exit(0);
 		}
 		
 		if( !env.IsSolution() ) {
@@ -52,18 +44,8 @@ public class SisyphusI {
 		}
 		
 		final String out = fromFile+".out";
-		long startWritingTime = System.currentTimeMillis();
-		env.findSolution();
-		//env.makeSolution();
 		try {
 			PrintStream outFile = new PrintStream(new FileOutputStream(out));
-			// Form: assigned-to(name,room-name)
-			for (int i = 0; i < env.arrPeople.size(); i++) {
-				Person currentPerson = env.arrPeople.get(i);
-				Room room = env.assignmentMap.get(currentPerson);
-				outFile.println("assigned-to(" + currentPerson.getName() + "," + room.getName() + ")");
-			}
-			/*
 			outFile.println( "***Employees***" );
 			for( int i = 0; i < env.arrEmployees.size(); i++ )
 			{
@@ -114,22 +96,82 @@ public class SisyphusI {
 			{
 				outFile.println(env.arrPredicates.get(i).toString());
 			}
-			*/
-			int totalUtil = env.calcTotalUtility();
+			env.findSolution();
+			//env.makeSolution();
+			int totalUtil = env.calcTotalUtility(true);
 			System.out.println( totalUtil );
 			env.printConstriants();
 			outFile.close();
 		} catch (Exception ex) {}
-		System.out.println("Time to read to file: " + (System.currentTimeMillis() - startWritingTime) + "ms");
 		/*
 		 if( env.IsSolution() )
 		 System.out.println("There is a valid solution for this input");
 		 else
 		 System.out.println("There is not a valid solution for this input");
 		 */
-		long endtime = System.currentTimeMillis() - startTime;
-		System.out.println("Total time: " + endtime + "ms");
-		System.out.println("Under time constraint? " + (endtime < maxtime));
+		System.out.println("Total time: " + (System.currentTimeMillis() - startTime) + "ms");
+		/*
+		 
+		 Thread shutdownHookThread = new Thread("SisyphusIShutdownHook")
+		 {@Override public void run() {
+		 System.err.println("***Shutdown hook activated***");
+		 
+		 System.err.println(env.currentSolution==null
+		 ?"no current solution"
+		 :env.currentSolution.toString());
+		 System.err.println("***Shutdown hook termniated***");
+		 }};
+		 Runtime.getRuntime().addShutdownHook(shutdownHookThread);
+		 
+		 if (args.length>1) {
+		 try {
+		 long timeLimit = new Long(args[1]).longValue();
+		 //timeLimit -= (System.currentTimeMillis()-startTime);
+		 System.out.println("Performing search for "+timeLimit+"ms");
+		 env.a_search("DepthFirstTreeSearch", "SmartControl", timeLimit);
+		 }
+		 catch (NumberFormatException ex) {
+		 env.currentSolution = new Solution(args[1]);
+		 }
+		 }
+		 
+		 if (env.currentSolution!=null) {
+		 //System.out.println(currentSolution.toString());
+		 System.out.println(env.currentSolution.getName()+": isSolved()    -> "+env.currentSolution.isSolved());
+		 System.out.println(env.currentSolution.getName()+": getGoodness() -> "+env.currentSolution.getGoodness());
+		 }
+		 
+		 if (args.length>1) {
+		 System.exit(1);
+		 }
+		 
+		 final int maxBuf = 200;
+		 byte[] buf = new byte[maxBuf];
+		 int length;
+		 try {
+		 System.out.print("\nSisyphus I: query using predicates, assert using \"!\" prefixing predicates;\n !exit() to quit; !help() for help.\n\n> ");
+		 while ((length=System.in.read(buf))!=-1) {
+		 String s = new String(buf,0,length);
+		 s = s.trim();
+		 if (s.equals("exit")) break;
+		 if (s.equals("?")||s.equals("help")) {
+		 s = "!help()";
+		 System.out.println("> !help()");
+		 }
+		 if (s.length()>0) {
+		 if (s.charAt(0)=='!') 
+		 env.assert_(s.substring(1));
+		 else 
+		 System.out.print(" --> "+env.eval(s));
+		 }
+		 System.out.print("\n> ");
+		 }
+		 } catch (Exception e) {
+		 System.err.println("exiting: "+e.toString());
+		 }
+		 try {
+		 Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
+		 } catch (IllegalStateException e) {}; */
 	}
 	
 }
