@@ -44,22 +44,24 @@ public class SisyphusI {
 		final String out = fromFile+".out";
 		long startFindingSolution = System.currentTimeMillis();
 		env.findSolution();
-		int totalUtil = env.calcTotalUtility(false);
+		int totalUtil = env.calcTotalUtility(true); // false for loop
 		long finishFindingSolution = System.currentTimeMillis();
 		long solutionTime = finishFindingSolution - startFindingSolution;
 
 		long avgSolutionTime = solutionTime;
 		
-		while (avgSolutionTime < (maxtime - (System.currentTimeMillis() - startTime))/2) {
+		/*while (avgSolutionTime < (maxtime - (System.currentTimeMillis() - startTime))/2) {
 			startFindingSolution = System.currentTimeMillis();
 			env.findSolution();
 			totalUtil = env.calcTotalUtility(false);
 			finishFindingSolution = System.currentTimeMillis();
 			solutionTime = finishFindingSolution - startFindingSolution;
 			avgSolutionTime = (avgSolutionTime + solutionTime)/2;
-		}
-		
-		// run totalutil again on final solution with param true
+			// compare solution utility with previous solution utility
+			// store current solution if better (with utility)
+		}*/
+		// retrieve (if applicable) best solution if stored.
+		// run totalutil again on final solution with param true to find correct constraint nums
 		
 		//System.out.println("Time to find solution: " + (System.currentTimeMillis() - startTime));
 		//env.makeSolution();		
