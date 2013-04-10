@@ -2,6 +2,8 @@ package cpsc433;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -44,24 +46,38 @@ public class SisyphusI {
 		final String out = fromFile+".out";
 		long startFindingSolution = System.currentTimeMillis();
 		env.findSolution();
-		int totalUtil = env.calcTotalUtility(true); // false for loop
+		int totalUtil = env.calcTotalUtility(false); // false for loop
 		long finishFindingSolution = System.currentTimeMillis();
 		long solutionTime = finishFindingSolution - startFindingSolution;
 
 		long avgSolutionTime = solutionTime;
+		Map<Person,Room> assignmentMap_oldSolution = new HashMap<Person, Room>();
+		assignmentMap_oldSolution = env.assignmentMap;
+		int oldUtil = totalUtil;
+		int count = 0;
+		
 		
 		/*while (avgSolutionTime < (maxtime - (System.currentTimeMillis() - startTime))/2) {
+			env.assignmentMap.clear();
+			count++;
+			System.out.println(count);
 			startFindingSolution = System.currentTimeMillis();
-			env.findSolution();
+			// ********
+			env.findSolution();	// *******RUNTIME ERROR HERE SINCE ROOMS ARE BEING REMOVED FROM ARRROOMS ARRAYLIST -> NEEDS TO BE FIXED *******
+			// ********
 			totalUtil = env.calcTotalUtility(false);
 			finishFindingSolution = System.currentTimeMillis();
 			solutionTime = finishFindingSolution - startFindingSolution;
 			avgSolutionTime = (avgSolutionTime + solutionTime)/2;
-			// compare solution utility with previous solution utility
-			// store current solution if better (with utility)
-		}*/
-		// retrieve (if applicable) best solution if stored.
-		// run totalutil again on final solution with param true to find correct constraint nums
+			
+			if (totalUtil > oldUtil) {
+				assignmentMap_oldSolution = env.assignmentMap;
+				oldUtil = totalUtil;
+			}
+		}
+		env.assignmentMap = assignmentMap_oldSolution;
+		totalUtil = env.calcTotalUtility(true);
+		*/
 		
 		//System.out.println("Time to find solution: " + (System.currentTimeMillis() - startTime));
 		//env.makeSolution();		
