@@ -42,9 +42,29 @@ public class SisyphusI {
 		}
 		
 		final String out = fromFile+".out";
-		long startWritingTime = System.currentTimeMillis();
+		long startFindingSolution = System.currentTimeMillis();
 		env.findSolution();
+		int totalUtil = env.calcTotalUtility(false);
+		long finishFindingSolution = System.currentTimeMillis();
+		long solutionTime = finishFindingSolution - startFindingSolution;
+
+		long avgSolutionTime = solutionTime;
+		
+		while (avgSolutionTime < (maxtime - (System.currentTimeMillis() - startTime))/2) {
+			startFindingSolution = System.currentTimeMillis();
+			env.findSolution();
+			totalUtil = env.calcTotalUtility(false);
+			finishFindingSolution = System.currentTimeMillis();
+			solutionTime = finishFindingSolution - startFindingSolution;
+			avgSolutionTime = (avgSolutionTime + solutionTime)/2;
+		}
+		
+		// run totalutil again on final solution with param true
+		
+		//System.out.println("Time to find solution: " + (System.currentTimeMillis() - startTime));
 		//env.makeSolution();		
+		
+		long startWritingTime = System.currentTimeMillis();
 		try {
 			PrintStream outFile = new PrintStream(new FileOutputStream(out));
 			// Form: assigned-to(name,room-name)
@@ -53,61 +73,6 @@ public class SisyphusI {
 				Room room = env.assignmentMap.get(currentPerson);
 				outFile.println("assigned-to(" + currentPerson.getName() + "," + room.getName() + ")");
 			}
-			/*
-			outFile.println( "***Employees***" );
-			for( int i = 0; i < env.arrEmployees.size(); i++ )
-			{
-				outFile.println(env.arrEmployees.get(i).toString());
-			}
-			outFile.println( "***Rooms***" );
-			for( int i = 0; i < env.arrRooms.size(); i++ )
-			{
-				outFile.println(env.arrRooms.get(i).toString());
-			}
-			outFile.println( "***Groups***" );
-			for( int i = 0; i < env.arrGroups.size(); i++ )
-			{
-				outFile.println(env.arrGroups.get(i).toString());
-			}
-			outFile.println( "***Projects***" );
-			for( int i = 0; i < env.arrProjects.size(); i++ )
-			{
-				outFile.println(env.arrProjects.get(i).toString());
-			}
-			outFile.println( "***Room Sizes***" );
-			for( int i = 0; i < env.arrRoomSizes.size(); i++ )
-			{
-				outFile.println(env.arrRoomSizes.get(i).toString());
-			}
-			outFile.println( "***Room Proximity***" );
-			for( int i = 0; i < env.arrRoomProximity.size(); i++ )
-			{
-				outFile.println(env.arrRoomProximity.get(i).toString());
-			}
-			outFile.println( "***Project Descriptions***" );
-			for( int i = 0; i < env.arrProjectDescriptions.size(); i++ )
-			{
-				outFile.println(env.arrProjectDescriptions.get(i).toString());
-			}
-			outFile.println( "***People Predicates***" );
-			for( int i = 0; i < env.arrPeople.size(); i++ )
-			{
-				outFile.println(env.arrPeople.get(i).getName());
-				outFile.println(env.arrPeople.get(i).getGroup());
-				outFile.println(env.arrPeople.get(i).getProject());
-				//outFile.println(env.arrPeople.get(i).getName());
-				//outFile.println(env.arrPeople.get(i).getName());
-				//outFile.println(env.arrPeople.get(i).getName());
-			}
-			outFile.println( "***Remaining Predicates***" );
-			for( int i = 0; i < env.arrPredicates.size(); i++ )
-			{
-				outFile.println(env.arrPredicates.get(i).toString());
-			}
-			env.findSolution();
-			//env.makeSolution();
-			*/
-			int totalUtil = env.calcTotalUtility(true);
 			System.out.println( totalUtil );
 			env.printConstriants();
 			outFile.close();
