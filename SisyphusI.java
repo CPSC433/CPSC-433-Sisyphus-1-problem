@@ -29,13 +29,21 @@ public class SisyphusI {
 		Environment env = new Environment("PredicateReader");
 		
 		String fromFile = null;
+		long maxtime = 0;
 		
-		if (args.length>0) {
+		if (args.length == 2) {
 			fromFile = args[0];
 			env.fromFile(fromFile);
+			try {
+				maxtime = Long.valueOf(args[1]);
+			} catch (Exception ex) {
+				System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
+				System.exit(0);
+			}
 		}
 		else {
 			System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
+			System.exit(0);
 		}
 		
 		if( !env.IsSolution() ) {
@@ -44,8 +52,18 @@ public class SisyphusI {
 		}
 		
 		final String out = fromFile+".out";
+		long startWritingTime = System.currentTimeMillis();
+		env.findSolution();
+		//env.makeSolution();		
 		try {
 			PrintStream outFile = new PrintStream(new FileOutputStream(out));
+			// Form: assigned-to(name,room-name)
+			for (int i = 0; i < env.arrPeople.size(); i++) {
+				Person currentPerson = env.arrPeople.get(i);
+				Room room = env.assignmentMap.get(currentPerson);
+				outFile.println("assigned-to(" + currentPerson.getName() + "," + room.getName() + ")");
+			}
+			/*
 			outFile.println( "***Employees***" );
 			for( int i = 0; i < env.arrEmployees.size(); i++ )
 			{
@@ -98,18 +116,22 @@ public class SisyphusI {
 			}
 			env.findSolution();
 			//env.makeSolution();
+			*/
 			int totalUtil = env.calcTotalUtility(true);
 			System.out.println( totalUtil );
 			env.printConstriants();
 			outFile.close();
 		} catch (Exception ex) {}
+		System.out.println("Time to read to file: " + (System.currentTimeMillis() - startWritingTime) + "ms");
 		/*
 		 if( env.IsSolution() )
 		 System.out.println("There is a valid solution for this input");
 		 else
 		 System.out.println("There is not a valid solution for this input");
 		 */
-		System.out.println("Total time: " + (System.currentTimeMillis() - startTime) + "ms");
+		long endtime = System.currentTimeMillis() - startTime;
+		System.out.println("Total time: " + endtime + "ms");
+		System.out.println("Under time constraint? " + (endtime < maxtime));
 		/*
 		 
 		 Thread shutdownHookThread = new Thread("SisyphusIShutdownHook")
