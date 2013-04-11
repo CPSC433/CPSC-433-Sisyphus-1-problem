@@ -714,37 +714,35 @@ implements SisyphusPredicates
 		{
 			// create array to hold indices of rooms with the same highest util value, to randomly choose from at the end
 			ArrayList<Integer> rooms_w_same_util = new ArrayList<Integer>();
-			ArrayList<Boolean> new_room_filled = new ArrayList<Boolean>();
 			
 			Person currentPerson = arrPeople.get(i);
 			ArrayList<Integer> arrUtil = new ArrayList<Integer>();
 			for( int j = 0; j < arrRooms.size(); j++ )
 			{
 				assignmentMap.put(currentPerson, arrRooms.get(j));
-				if( currentPerson.getIsManager() && !arrRooms.get(j).isEmpty() ){
-					arrUtil.add(-10000);
-					new_room_filled.add(false);
+				if( (currentPerson.getIsManager() || currentPerson.getIsGroupHead() || currentPerson.getIsProjectHead()) && !arrRooms.get(j).isEmpty() ){ // also for project heads and group heads?
+					arrUtil.add(-2147483648); // essentially -infinity (lowest value int can take)
 				}
-				else{
-					arrUtil.add(calcTotalUtility(false));
-					if (arrRooms.get(j).isEmpty()){
-						new_room_filled.add(true);
-					}
-					else {
-						new_room_filled.add(false);
-					}
-					assignmentMap.remove(currentPerson);
+				/*
+				else if ((currentPerson.getIsManager() || currentPerson.getIsProjectHead()) && arrRooms.get(j).getIsSmall()) { 
+					// place managers and project heads in small room if possible
+					arrUtil.add(calcTotalUtility(false) + 25);
 				}
-				
+				else if ((currentPerson.getIsManager() || currentPerson.getIsProjectHead()) && arrRooms.get(j).getIsLarge()) { 
+					// don't place managers and project heads in large room if possible
+					arrUtil.add(calcTotalUtility(false) - 10);
+				}
+				*/
+				else {
+					arrUtil.add(calcTotalUtility(false));	
+				}
 			}
 			//this is the control for the path we wish to take
-			int highestUtil = -10000;
+			int highestUtil = -2147483648; // highestUtil is -infinity
 			int index = 0;
-			boolean newRoomFlag = false; 
 			for( int j = 0; j < arrUtil.size(); j++ )
 			{
 				int util = arrUtil.get(j);
-				boolean newRoom = new_room_filled.get(j);
 				if( util > highestUtil )  //our first control is to take the room configuration with the highest utility
 				{
 					highestUtil = util;
@@ -753,7 +751,6 @@ implements SisyphusPredicates
 					rooms_w_same_util.clear();
 					// set first element in array to be index of room
 					rooms_w_same_util.add(j);
-					newRoomFlag = newRoom;
 				}
 				// if utility of room is the same as highest utility, we will randomly choose one at the end
 				/*else if (util == highestUtil && newRoom && !newRoomFlag){ //if multiple rooms have the same highest utility we check to see if a new room is being used
@@ -775,14 +772,14 @@ implements SisyphusPredicates
 				Random gen = new Random();	// seeded for testing -- REMOVE SEED BEFORE FULL IMPLEMENTATION
 				index = gen.nextInt(rooms_w_same_util.size());
 			}
-			
 			assignmentMap.put(currentPerson, arrRooms.get(index));
 			arrRooms.get(index).setOccupant( currentPerson );
 			
-			System.out.println( currentPerson.getName() + "  " + arrRooms.get(index).getName() );
+			//System.out.println( currentPerson.getName() + "  " + arrRooms.get(index).getName());
 			
-			if( currentPerson.getIsManager() || arrRooms.get(index).isShared() )
+			if( currentPerson.getIsManager() || currentPerson.getIsGroupHead() || currentPerson.getIsProjectHead() || arrRooms.get(index).isShared() ) {
 				arrRooms.remove(index);
+			}
 			
 		}
 	}
@@ -902,7 +899,7 @@ implements SisyphusPredicates
 		}
 	}
 	
-	private void orderEmployees()
+	public void orderEmployees()
 	{
 		for( int i = 0; i < arrPeople.size(); i++ )
 		{
