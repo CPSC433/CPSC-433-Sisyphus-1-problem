@@ -85,6 +85,11 @@ public class Room
 		return person;
 	}
 	
+	public void clearOccupants() {
+		occupants.set(0, null);
+		occupants.set(1, null);
+	}
+	
 	// Maybe we should make a function that instead returns # of people in the room to replace the two functions below
 	
 	public boolean isEmpty() {
