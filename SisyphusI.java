@@ -2,6 +2,7 @@ package cpsc433;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,40 +45,58 @@ public class SisyphusI {
 		}
 		
 		final String out = fromFile+".out";
+		
+		ArrayList<Room> arrRooms = new ArrayList<Room>();
+		//ArrayList<Room> best_arrRooms = new ArrayList<Room>();
+		arrRooms.addAll(env.arrRooms); // save arrRooms for next use
+		
+		env.orderEmployees();
+		
 		long startFindingSolution = System.currentTimeMillis();
 		env.findSolution();
 		int totalUtil = env.calcTotalUtility(false); // false for loop
+		//best_arrRooms.addAll(env.arrRooms);
 		long finishFindingSolution = System.currentTimeMillis();
 		long solutionTime = finishFindingSolution - startFindingSolution;
 
 		long avgSolutionTime = solutionTime;
 		Map<Person,Room> assignmentMap_oldSolution = new HashMap<Person, Room>();
-		assignmentMap_oldSolution = env.assignmentMap;
+		
+		assignmentMap_oldSolution.putAll(env.assignmentMap);
+		
 		int oldUtil = totalUtil;
-		int count = 0;
 		
-		
-		/*while (avgSolutionTime < (maxtime - (System.currentTimeMillis() - startTime))/2) {
+		while (avgSolutionTime < (maxtime - (System.currentTimeMillis() - startTime))/10) {
+			// reset arrRooms and occupants of room
+			env.arrRooms.clear();
+			for (int i = 0; i < arrRooms.size(); i++) {
+				env.arrRooms.add(arrRooms.get(i));
+				env.arrRooms.get(i).clearOccupants();
+			}
+			
 			env.assignmentMap.clear();
-			count++;
-			System.out.println(count);
+			
 			startFindingSolution = System.currentTimeMillis();
-			// ********
-			env.findSolution();	// *******RUNTIME ERROR HERE SINCE ROOMS ARE BEING REMOVED FROM ARRROOMS ARRAYLIST -> NEEDS TO BE FIXED *******
-			// ********
+			env.findSolution();	
 			totalUtil = env.calcTotalUtility(false);
 			finishFindingSolution = System.currentTimeMillis();
+			
 			solutionTime = finishFindingSolution - startFindingSolution;
+			
 			avgSolutionTime = (avgSolutionTime + solutionTime)/2;
 			
 			if (totalUtil > oldUtil) {
-				assignmentMap_oldSolution = env.assignmentMap;
+				assignmentMap_oldSolution.clear();
+				assignmentMap_oldSolution.putAll(env.assignmentMap);
 				oldUtil = totalUtil;
 			}
 		}
-		env.assignmentMap = assignmentMap_oldSolution;
+		//System.out.println("Average time to find solution: " + avgSolutionTime);
+		//System.out.println("Number of solutions found: " + count);
+		env.assignmentMap.clear();
+		env.assignmentMap.putAll(assignmentMap_oldSolution);
 		totalUtil = env.calcTotalUtility(true);
-		*/
+		
 		
 		//System.out.println("Time to find solution: " + (System.currentTimeMillis() - startTime));
 		//env.makeSolution();		
@@ -92,10 +111,12 @@ public class SisyphusI {
 				outFile.println("assigned-to(" + currentPerson.getName() + "," + room.getName() + ")");
 			}
 			System.out.println( totalUtil );
-			env.printConstriants();
+			//env.printConstriants();
 			outFile.close();
 		} catch (Exception ex) {}
-		System.out.println("Time to read to file: " + (System.currentTimeMillis() - startWritingTime) + "ms");
+		
+		//System.out.println("Time to read to file: " + (System.currentTimeMillis() - startWritingTime) + "ms");
+		
 		/*
 		 if( env.IsSolution() )
 		 System.out.println("There is a valid solution for this input");
@@ -103,8 +124,8 @@ public class SisyphusI {
 		 System.out.println("There is not a valid solution for this input");
 		 */
 		long endtime = System.currentTimeMillis() - startTime;
-		System.out.println("Total time: " + endtime + "ms");
-		System.out.println("Under time constraint? " + (endtime < maxtime));
+		//System.out.println("Total time: " + endtime + "ms");
+		//System.out.println("Under time constraint? " + (endtime < maxtime));
 	}
 	
 }
