@@ -95,7 +95,14 @@ public class SisyphusI {
 		//System.out.println("Number of solutions found: " + count);
 		env.assignmentMap.clear();
 		env.assignmentMap.putAll(assignmentMap_oldSolution);
-		totalUtil = env.calcTotalUtility(true);
+		//totalUtil = env.calcTotalUtility(true);
+		/* 
+		 * Since we already have the lowest utility, we shouldn't need to recalculate it to 
+		 * get the value; the reason we will still need to run it though (if we want) is for
+		 * number of constraints broken.
+		 */
+		env.calcTotalUtility(true);
+		totalUtil = oldUtil;
 		
 		
 		//System.out.println("Time to find solution: " + (System.currentTimeMillis() - startTime));
@@ -115,17 +122,9 @@ public class SisyphusI {
 			outFile.close();
 		} catch (Exception ex) {}
 		
-		//System.out.println("Time to read to file: " + (System.currentTimeMillis() - startWritingTime) + "ms");
-		
-		/*
-		 if( env.IsSolution() )
-		 System.out.println("There is a valid solution for this input");
-		 else
-		 System.out.println("There is not a valid solution for this input");
-		 */
-		long endtime = System.currentTimeMillis() - startTime;
-		//System.out.println("Total time: " + endtime + "ms");
-		//System.out.println("Under time constraint? " + (endtime < maxtime));
+		if( !env.IsSolution() )
+			System.out.println("There is not a valid solution for this input");
+		//System.out.println("Total time: " + (System.currentTimeMillis() - startTime) + "ms");
 	}
 	
 }
