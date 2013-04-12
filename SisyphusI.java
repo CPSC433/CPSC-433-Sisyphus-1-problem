@@ -118,7 +118,7 @@ public class SisyphusI {
 				outFile.println("assigned-to(" + currentPerson.getName() + "," + room.getName() + ")");
 			}
 			System.out.println( totalUtil );
-			//env.printConstriants();
+			env.printConstriants();
 			outFile.close();
 		} catch (Exception ex) {}
 		
