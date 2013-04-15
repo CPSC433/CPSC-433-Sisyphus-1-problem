@@ -9,11 +9,11 @@ import java.util.Random;
 
 import cpsc433.Predicate.ParamType;
 
+// Every thing within this class sets up our search environment
 public class Environment 
 extends PredicateReader
 implements SisyphusPredicates 
 {
-	
 	public Environment(String name) {
 		super(name);
 		for(int i = 0; i < 16; i++)
@@ -623,52 +623,61 @@ implements SisyphusPredicates
 	public int utility (Person person, Room room, boolean end_util)
 	{
 		int util = 0;
+		//all constraints that require two people in a room are within this if statement
 		if (room.isShared())
 		{
-			util -= 4;
-			if (end_util) con[13]++;
-			if (person.getIsSmoker() && !(room.getOther(person).getIsSmoker())) {util -= 50; if (end_util) con[10]++;}
-			if (room.getIsSmall()) {util -= 25; if (end_util) con[15]++;}
-			if (!person.getProject().equals("") && person.getProject().equals(room.getOther(person).getProject())) {util -= 7; if (end_util) con[11]++;}  
-			if (!person.worksWith(room.getOther(person))) {util -= 3; if (end_util) con[14]++;}
+			util -= 4; //since room is shared add constriant 14
+			if (end_util) con[13]++; 
+			if (person.getIsSmoker() && !(room.getOther(person).getIsSmoker())) {util -= 50; if (end_util) con[10]++;} //if a person is a smoker and is in a room with a non smoker add constraint 11
+			if (room.getIsSmall()) {util -= 25; if (end_util) con[15]++;} //if a person shares a small room, add constraint 16
+			if (!person.getProject().equals("") && person.getProject().equals(room.getOther(person).getProject())) {util -= 7; if (end_util) con[11]++;} //if a person is in a project and shares a room with another person in the same project add constraint 12
+			if (!person.worksWith(room.getOther(person))) {util -= 3; if (end_util) con[14]++;} //if a person does not share a room with a person they work with add constraint 15
 			if (!person.getIsSecretary())
 			{
-				if (person.getIsHacker() && !room.getOther(person).getIsHacker()) {util -= 2; if (end_util) con[12]++;}
-				if (!person.getIsHacker() && room.getOther(person).getIsHacker()) {util -= 2; if (end_util) con[12]++;}
+				if (person.getIsHacker() && !room.getOther(person).getIsHacker()) {util -= 2; if (end_util) con[12]++;} //add constraint 13 if a person is a hacker/non-hacker
+				if (!person.getIsHacker() && room.getOther(person).getIsHacker()) {util -= 2; if (end_util) con[12]++;} //and does not share a room with a hacker/non-hacker
 			}
 		}
-		if (person.getIsSecretary() && room.isShared() && !room.getOther(person).getIsSecretary()) {util -= 5; if (end_util) con[3]++;}
-		if (!person.getIsManager())
+		
+		//add constraint 4 if a a Secretary does not share a room with a secrectary
+		if (person.getIsSecretary() && room.isShared() && !room.getOther(person).getIsSecretary()) {util -= 5; if (end_util) con[3]++;} 
+		
+		//if a person is not a manager check to see if employee is cloes to the manager
+		if (!person.getIsManager()) 
 		{
 			boolean closeToManager = false;
 			Room temp;
-			for (int i = 0; i < room.getCloseRoomsize() && !closeToManager; i++)
+			for (int i = 0; i < room.getCloseRoomsize() && !closeToManager; i++) //check all close rooms for a manager, stop if a manager is found or if all rooms have been checked
 			{
 				temp = room.getClose(i);
 				if (!temp.isShared() && !temp.isEmpty())
 				{
-					if (temp.getOccupant(0).getIsManager()) closeToManager = true;
+					if (temp.getOccupant(0).getIsManager()) closeToManager = true; //check only the first person element in the room since manager do not share rooms
 				}
 			}
-			if (!closeToManager) {util -= 2; if (end_util) con[1]++;}
+			if (!closeToManager) {util -= 2; if (end_util) con[1]++;} //if no manager is in a close room add constraint 2
 		}
-		if (!person.getIsGroupHead())
+		
+		 //if a person is not a group head check to see if the employee is close to a group head
+		if (!person.getIsGroupHead()) 
 		{
 			boolean closeToHead = false;
 			Room temp;
-			for (int i = 0; i < room.getCloseRoomsize() && !closeToHead; i++)
+			for (int i = 0; i < room.getCloseRoomsize() && !closeToHead; i++) //check all close rooms for a group head, stop their group head is not found or if all rooms have been checked
 			{
 				temp = room.getClose(i);
 				if (!temp.isShared() && !temp.isEmpty())
 				{
-					if (temp.getOccupant(0).getIsGroupHead() && person.getGroup().equals(temp.getOccupant(0).getGroup())) closeToHead = true;
+					if (temp.getOccupant(0).getIsGroupHead() && person.getGroup().equals(temp.getOccupant(0).getGroup())) closeToHead = true; //check only the first person element in the room since group heads do not share rooms
 				}
 			}
-			if (!closeToHead) {util -= 2; if (end_util) con[6]++;}
-			if (!closeToHead && person.getIsManager()) {util -= 20; if (end_util) con[5]++;}
-			if (!closeToHead && person.getIsProjectHead() && person.getIsProjectLarge() ) {util -= 10; if (end_util) con[9]++;}
+			if (!closeToHead) {util -= 2; if (end_util) con[6]++;} // add constraint 7 if the person is not close to their group head
+			if (!closeToHead && person.getIsManager()) {util -= 20; if (end_util) con[5]++;} // add constriant 6 if the person is a manager and is not close to their group head
+			if (!closeToHead && person.getIsProjectHead() && person.getIsProjectLarge() ) {util -= 10; if (end_util) con[9]++;} // add constriant 10 if the user is a project lead and not close to a group head
 		}
-		if (!person.getIsProjectHead())
+		
+		//this is essentially the same code as for the manager loop
+		if (!person.getIsProjectHead()) 
 		{
 			boolean closeToHead = false;
 			boolean isProjectHead = false;
@@ -683,27 +692,32 @@ implements SisyphusPredicates
 				temp = room.getClose(i);
 				if (!temp.isEmpty() && temp.getOccupant(0).getIsProjectHead() && person.getProject().equals(temp.getOccupant(0).getProject())) closeToHead = true;
 			}
-			if (!closeToHead && isProjectHead) {util -= 5; if (end_util) con[7]++;}
+			if (!closeToHead && isProjectHead) {util -= 5; if (end_util) con[7]++;} // add constraint 8 if the person is not close to the project head
 		}	
-		if (person.getIsGroupHead() && !room.getIsLarge()) {util -= 40; if (end_util) con[0]++;}
-		if (person.getIsGroupHead() || person.getIsProjectHead() || person.getIsManager())
+		
+		//if a group head does not have a large room add constraint 1
+		if (person.getIsGroupHead() && !room.getIsLarge()) {util -= 40; if (end_util) con[0]++;} 
+		
+		//for a manager, project head and group head check to see if they are close to a secretary
+		if (person.getIsGroupHead() || person.getIsProjectHead() || person.getIsManager()) 
 		{
 			boolean closeToSecretary = false;
 			Room temp;
+			//loop through all close room and exit loop if a secretary is found or if all close rooms have been searched
 			for (int i = 0; i < room.getCloseRoomsize() && !closeToSecretary; i++)
 			{
 				temp = room.getClose(i);
-				if (!temp.isShared() && !temp.isEmpty()) {
+				if (!temp.isShared() && !temp.isEmpty()) { //if there is only one person check only the first person element
 					if (temp.getOccupant(0).getIsSecretary() && person.getGroup().equals(temp.getOccupant(0).getGroup())) closeToSecretary = true;
 				}
-				else if (temp.isShared()) {
+				else if (temp.isShared()) { //if there are two people in the close room check both person elements
 					if (temp.getOccupant(0).getIsSecretary() && person.getGroup().equals(temp.getOccupant(0).getGroup())) closeToSecretary = true;
 					if (temp.getOccupant(1).getIsSecretary() && person.getGroup().equals(temp.getOccupant(0).getGroup())) closeToSecretary = true;
 				}
 			}
-			if (!closeToSecretary && person.getIsGroupHead()) {util -= 30; if (end_util) con[2]++;}
-			if (!closeToSecretary && person.getIsManager()) {util -= 20; if (end_util) con[4]++;}
-			if (!closeToSecretary && person.getIsProjectHead() && person.getIsProjectLarge()) {util -=10; if (end_util) con[8]++;}
+			if (!closeToSecretary && person.getIsGroupHead()) {util -= 30; if (end_util) con[2]++;} //add constriant 3 if a group head is not close to a secretary
+			if (!closeToSecretary && person.getIsManager()) {util -= 20; if (end_util) con[4]++;} //add constriant 5 if a manager ...
+			if (!closeToSecretary && person.getIsProjectHead() && person.getIsProjectLarge()) {util -=10; if (end_util) con[8]++;} //add constriant 9 if a project head ...
 		}
 		return util;
 	}
@@ -723,16 +737,6 @@ implements SisyphusPredicates
 				if( (currentPerson.getIsManager() || currentPerson.getIsGroupHead() || currentPerson.getIsProjectHead()) && !arrRooms.get(j).isEmpty() ){ // also for project heads and group heads?
 					arrUtil.add(-2147483648); // essentially -infinity (lowest value int can take)
 				}
-				/*
-				else if ((currentPerson.getIsManager() || currentPerson.getIsProjectHead()) && arrRooms.get(j).getIsSmall()) { 
-					// place managers and project heads in small room if possible
-					arrUtil.add(calcTotalUtility(false) + 25);
-				}
-				else if ((currentPerson.getIsManager() || currentPerson.getIsProjectHead()) && arrRooms.get(j).getIsLarge()) { 
-					// don't place managers and project heads in large room if possible
-					arrUtil.add(calcTotalUtility(false) - 10);
-				}
-				*/
 				else {
 					arrUtil.add(calcTotalUtility(false));	
 				}
@@ -752,24 +756,14 @@ implements SisyphusPredicates
 					// set first element in array to be index of room
 					rooms_w_same_util.add(j);
 				}
-				// if utility of room is the same as highest utility, we will randomly choose one at the end
-				/*else if (util == highestUtil && newRoom && !newRoomFlag){ //if multiple rooms have the same highest utility we check to see if a new room is being used
-					highestUtil = util;                               //if so we choose those configurations which have the highest utility and more rooms used
-					index = j;
-					// clear array because new highest util has been found
-					rooms_w_same_util.clear();
-					// set first element in array to be index of room
-					rooms_w_same_util.add(j);
-					newRoomFlag = newRoom;
-				}*/
-				else if (util == highestUtil /*&& newRoom == newRoomFlag*/){ //if the Utility is the same and the amount of rooms used is the same then add the
-					rooms_w_same_util.add(j);			//index to the array of possible paths
+				else if (util == highestUtil /*&& newRoom == newRoomFlag*/){ //if the Utility is the same then add the
+					rooms_w_same_util.add(j);			//index to the array of possible room assignments
 				}
 			}
 			
-			// If there is more than one room with the same utility and amount of rooms used (preference for more rooms used) to choose from, choose randomly 
+			// If there is more than one room with the same utility to choose from, choose randomly from that list
 			if (rooms_w_same_util.size() > 1) {
-				Random gen = new Random();	// seeded for testing -- REMOVE SEED BEFORE FULL IMPLEMENTATION
+				Random gen = new Random();
 				index = gen.nextInt(rooms_w_same_util.size());
 			}
 			assignmentMap.put(currentPerson, arrRooms.get(index));
@@ -777,6 +771,7 @@ implements SisyphusPredicates
 			
 			//System.out.println( currentPerson.getName() + "  " + arrRooms.get(index).getName());
 			
+			//when a room is full remove it from the available rooms array
 			if( currentPerson.getIsManager() || currentPerson.getIsGroupHead() || currentPerson.getIsProjectHead() || arrRooms.get(index).isShared() ) {
 				arrRooms.remove(index);
 			}
@@ -784,9 +779,11 @@ implements SisyphusPredicates
 		}
 	}
 	
+	//calculates the total utility of the current room arrangement
 	public int calcTotalUtility(boolean bCountConstraints)
 	{
 		int totalUtil = 0;
+		//takes our assignment map and iteratively calculates the utility of each person
 		Iterator it = assignmentMap.entrySet().iterator();
 		while (it.hasNext()) 
 		{
@@ -799,99 +796,7 @@ implements SisyphusPredicates
 		return totalUtil;
 	}
 	
-	public void makeSolution()
-	{
-		int i = findPersonIndex( "Andy" );
-		int j = findRoomIndex( "C5113" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Angi" );
-		j = findRoomIndex( "C5113" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Eva" );
-		j = findRoomIndex( "C5114" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Hans" );
-		j = findRoomIndex( "C5115" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Harry" );
-		j = findRoomIndex( "C5116" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Joachim" );
-		j = findRoomIndex( "C5117" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Jurgen" );
-		j = findRoomIndex( "C5116" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Katharina" );
-		j = findRoomIndex( "C5119" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Marc" );
-		j = findRoomIndex( "C5120" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Michael" );
-		j = findRoomIndex( "C5123" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Monika" );
-		j = findRoomIndex( "C5121" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Thomas" );
-		j = findRoomIndex( "C5122" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Ulrike" );
-		j = findRoomIndex( "C5121" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Uwe" );
-		j = findRoomIndex( "C5123" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-		
-		i = findPersonIndex( "Werner" );
-		j = findRoomIndex( "C5120" );
-		
-		assignmentMap2.put(arrPeople.get(i), arrRooms.get(j));
-		arrRooms.get(j).setOccupant( arrPeople.get(i) );
-	}
-	
+	//originally here to print the total amount of times a soft constraint has been broken for the final solutions
 	public void printConstriants(){
 		for (int i = 0; i < 16; i++)
 		{
@@ -899,31 +804,37 @@ implements SisyphusPredicates
 		}
 	}
 	
+	//orders our employees based on what they are
 	public void orderEmployees()
 	{
+		//we order all people initial by their posistion
 		for( int i = 0; i < arrPeople.size(); i++ )
 		{
 			Person currentPerson = arrPeople.get(i);
 			if( currentPerson.getIsManager() ||  currentPerson.getIsManager() ||  currentPerson.getIsManager() )
-				arrManagers.add( currentPerson );
+				arrManagers.add( currentPerson ); //we sparate people is they are a manager
 			else if( currentPerson.getIsSmoker() )
-				arrSmokers.add( currentPerson );
+				arrSmokers.add( currentPerson ); // if not a manager we separate them is they are a smoker
 			else
-				arrResearchers.add( currentPerson );
+				arrResearchers.add( currentPerson ); // then finally other people
 		}
 		arrPeople.clear();
+		// for our people array we put the managers at the beginning of the array 
 		for( int i = 0; i < arrManagers.size(); i++ )
 		{
 			arrPeople.add(arrManagers.get(i));
 		}
+		// then smokers
 		for( int i = 0; i < arrSmokers.size(); i++ )
 		{
 			arrPeople.add(arrSmokers.get(i));
 		}
+		// and finally everyone else
 		for( int i = 0; i < arrResearchers.size(); i++ )
 		{
 			arrPeople.add(arrResearchers.get(i));
 		}
+		//we do this ordering to try to avoid some of the heavier soft constriants
 	}
 	
 }
