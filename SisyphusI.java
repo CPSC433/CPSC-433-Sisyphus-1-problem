@@ -6,17 +6,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
+/*
+ * SisyphusI Final Program created by Kristi Mikkelsen, Garrick van der Lee, Kyle McLenahan (Group 2)
+ * for CPSC 433 W13 - Artificial Intelligence
  */
 
 public class SisyphusI {
 	
-	/**
-	 * @param args
+	/*
+	 * main function, start point of program. This function creates the environment, tracks the time, 
+	 * outputs the solution to the output file, and calls functions from the enviroment class such as 
+	 * reading in the input file, checking if a solution can exist, and finding a solution. 
 	 */
 	public static void main(String[] args) {
-		
 		long startTime = System.currentTimeMillis();
 		
 		Environment env = new Environment("PredicateReader");
@@ -29,86 +31,82 @@ public class SisyphusI {
 			env.fromFile(fromFile);
 			try {
 				maxtime = Long.valueOf(args[1]);
-			} catch (Exception ex) {
+			} catch (Exception ex) { // if invalid max time is entered, exit program
 				System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
 				System.exit(0);
 			}
 		}
-		else {
+		else { // if incorrect input parameters are entered, exit program
 			System.out.println("Synopsis: SisyphusI <env-file> [<solution-file>|<time-in-ms>]");
 			System.exit(0);
 		}
 		
-		if( !env.IsSolution() ) {
+		if( !env.IsSolution() ) { // if no solution can exist, exit program
 			System.out.println("There is not a valid solution for this input");
 			System.exit(0);
 		}
 		
 		final String out = fromFile+".out";
 		
+		// create copy ArrayList to hold initial value of rooms, to reinitialize env.arrRooms in loop
 		ArrayList<Room> arrRooms = new ArrayList<Room>();
-		//ArrayList<Room> best_arrRooms = new ArrayList<Room>();
-		arrRooms.addAll(env.arrRooms); // save arrRooms for next use
+		arrRooms.addAll(env.arrRooms); 							// init
 		
+		// ordering employees ensures all managers/group heads/project heads have their own room
 		env.orderEmployees();
 		
+		// find first solution
 		long startFindingSolution = System.currentTimeMillis();
 		env.findSolution();
-		int totalUtil = env.calcTotalUtility(false); // false for loop
-		//best_arrRooms.addAll(env.arrRooms);
+		int totalUtil = env.calcTotalUtility(false); // false it is not the final run of calcTotalUtility
 		long finishFindingSolution = System.currentTimeMillis();
 		long solutionTime = finishFindingSolution - startFindingSolution;
-
-		long avgSolutionTime = solutionTime;
+		long avgSolutionTime = solutionTime; 		// used in loop
+		
+		// create copy Map to hold the solution just found and to compare to next solution found in the loop
 		Map<Person,Room> assignmentMap_oldSolution = new HashMap<Person, Room>();
+		assignmentMap_oldSolution.putAll(env.assignmentMap); 	// init
+		int oldUtil = totalUtil;								// init
 		
-		assignmentMap_oldSolution.putAll(env.assignmentMap);
-		
-		int oldUtil = totalUtil;
-		
+		/* 	loop to run env.findSolution as many times as possible, each time comparing the solution to 
+			the best solution found so far */
 		while (avgSolutionTime < (maxtime - (System.currentTimeMillis() - startTime))/10) {
-			// reset arrRooms and occupants of room
+			// reset arrRooms and occupants of room, and assignmentMap
 			env.arrRooms.clear();
 			for (int i = 0; i < arrRooms.size(); i++) {
 				env.arrRooms.add(arrRooms.get(i));
 				env.arrRooms.get(i).clearOccupants();
 			}
-			
 			env.assignmentMap.clear();
 			
+			// find the next solution
 			startFindingSolution = System.currentTimeMillis();
 			env.findSolution();	
 			totalUtil = env.calcTotalUtility(false);
 			finishFindingSolution = System.currentTimeMillis();
 			
 			solutionTime = finishFindingSolution - startFindingSolution;
+			avgSolutionTime = (avgSolutionTime + solutionTime)/2; // update the average solution time
 			
-			avgSolutionTime = (avgSolutionTime + solutionTime)/2;
-			
+			/* 	If the current solution is better than the best (so far) solution, replace it with the 
+				current solution assignmentMap and utility value for comparison */
 			if (totalUtil > oldUtil) {
 				assignmentMap_oldSolution.clear();
 				assignmentMap_oldSolution.putAll(env.assignmentMap);
 				oldUtil = totalUtil;
 			}
 		}
-		//System.out.println("Average time to find solution: " + avgSolutionTime);
-		//System.out.println("Number of solutions found: " + count);
+		
+		// clear assignmentMap and replace with best solution that was found
 		env.assignmentMap.clear();
 		env.assignmentMap.putAll(assignmentMap_oldSolution);
-		//totalUtil = env.calcTotalUtility(true);
-		/* 
-		 * Since we already have the lowest utility, we shouldn't need to recalculate it to 
-		 * get the value; the reason we will still need to run it though (if we want) is for
-		 * number of constraints broken.
-		 */
 		env.calcTotalUtility(true);
 		totalUtil = oldUtil;
+		/* 	Since we already have the lowest utility, we shouldn't need to recalculate it to 
+			get the value; the reason we will still need to run it is to calculate the number of
+			times each soft constraints was broken. */
 		
-		
-		//System.out.println("Time to find solution: " + (System.currentTimeMillis() - startTime));
-		//env.makeSolution();		
-		
-		long startWritingTime = System.currentTimeMillis();
+		// write the solution out to the file
 		try {
 			PrintStream outFile = new PrintStream(new FileOutputStream(out));
 			// Form: assigned-to(name,room-name)
@@ -121,10 +119,6 @@ public class SisyphusI {
 			env.printConstriants();
 			outFile.close();
 		} catch (Exception ex) {}
-		
-		if( !env.IsSolution() )
-			System.out.println("There is not a valid solution for this input");
-		//System.out.println("Total time: " + (System.currentTimeMillis() - startTime) + "ms");
 	}
 	
 }
