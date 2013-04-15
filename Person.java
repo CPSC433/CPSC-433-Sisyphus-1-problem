@@ -2,6 +2,9 @@ package cpsc433;
 
 import java.util.ArrayList;
 
+/* 
+ * This class holds all properties of each person, and has all getters and setters to access those properties.
+ */
 public class Person 
 {	
 	//private int personUtil;
